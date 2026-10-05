@@ -1,0 +1,15 @@
+COMO COLOCAR O APP NO AR (GitHub Pages) E INSTALAR NO ANDROID
+
+1) Crie uma conta em github.com (grátis) e um repositório novo chamado "tarefas" (público).
+2) Em "Add file > Upload files", envie TODOS os arquivos desta pasta (index.html, sw.js, manifest.webmanifest e os 3 ícones). Clique em "Commit changes".
+3) Vá em Settings > Pages. Em "Branch", escolha "main" e a pasta "/ (root)". Salve.
+4) Espere 1 a 2 minutos. O endereço será: https://SEU-USUARIO.github.io/tarefas/
+5) No Chrome do Android, abra o endereço, toque nos três pontinhos e em "Instalar app".
+6) Abra o app instalado, toque no sino e permita as notificações.
+
+LEVAR SUAS TAREFAS DO APP ANTIGO PARA O NOVO
+No app antigo: botão de importar (seta para baixo) > "Gerar backup e copiar".
+No app novo: mesmo botão > cole o texto no campo > "Restaurar".
+
+LIMITE ATUAL
+As notificações funcionam com o app aberto ou recém-aberto. Para avisar com o app fechado e compartilhar com sua esposa, o próximo passo é o banco de dados.

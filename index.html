@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Tarefas</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Tarefas"><meta name="theme-color" content="#2f6f5e"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{--bg:#f6f5f1;--cd:#fff;--tx:#1d1d1b;--mu:#77756e;--ac:#2f6f5e;--bd:#e3e0d8;--r:#c0392b;--y:#b7791f;--g:#2f7d4f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151614;--cd:#20221f;--tx:#eeede8;--mu:#9a988f;--ac:#4fa58c;--bd:#33352f;--r:#e5675a;--y:#e0a94a;--g:#5cb884}}
+:root[data-theme="dark"]{--bg:#151614;--cd:#20221f;--tx:#eeede8;--mu:#9a988f;--ac:#4fa58c;--bd:#33352f;--r:#e5675a;--y:#e0a94a;--g:#5cb884}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;border-bottom:1px solid var(--bd)}
+header span{display:flex;gap:6px}header button{border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:6px 9px;font:inherit}
+main{padding:10px 14px 150px;font-size:calc(15px*var(--z,1))}h4{margin:16px 0 6px}h3{margin:0 0 10px}.mu{color:var(--mu);font-size:.87em;margin:2px 0}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:calc(10px*var(--z,1)) calc(12px*var(--z,1));margin:8px 0;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.card.dn{opacity:.55}.p2{border-left:4px solid var(--r)}
+.tt{font-weight:600}.ch{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0}.c{font-size:.8em;border:1px solid var(--bd);border-radius:20px;padding:1px 8px;color:var(--mu)}
+.cr{color:var(--r);border-color:var(--r)}.cy{color:var(--y);border-color:var(--y)}.cg{color:var(--g);border-color:var(--g)}
+.nx{font-size:.93em;margin:4px 0}.nx.w{color:var(--y)}.wt{background:var(--bg);border-radius:8px;padding:8px;margin:6px 0;font-size:.93em}
+.pg{height:5px;background:var(--bd);border-radius:5px;margin:8px 0}.pg i{display:block;height:100%;background:var(--ac);border-radius:5px}
+.ck{display:flex;gap:8px;align-items:center;margin:4px 0}.ck input{width:auto;margin:0}
+.ac{display:flex;gap:6px;margin-top:8px}.ac>*{flex:1;border:1px solid var(--bd);background:none;border-radius:8px;padding:6px 0;text-align:center;text-decoration:none;color:var(--tx);font:inherit}
+.b{display:block;width:100%;text-align:center;border:0;border-radius:10px;padding:10px;background:var(--ac);color:#fff;font:inherit;font-weight:600;text-decoration:none;margin:4px 0}.b.g{background:var(--cd);color:var(--tx);border:1px solid var(--bd)}.b.d{background:var(--r)}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.r3{display:flex;gap:6px;margin-top:6px}.r3>*{flex:1;margin:0}
+.bd{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px}.col{min-width:min(88%,calc(80%*var(--z,1)));min-height:240px}.col.mini{display:inline-block;min-width:0;min-height:0;margin:0 0 6px;padding:5px 14px;border:1px dashed var(--bd);border-radius:20px;cursor:pointer;color:var(--mu);background:var(--cd)}.hb{border:1px solid var(--bd);background:var(--cd);color:var(--mu);border-radius:8px;padding:2px 8px;font:inherit;font-size:.8em;margin-left:6px}.col.ov{outline:2px dashed var(--ac);outline-offset:2px;border-radius:12px}.zm{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-bottom:6px;color:var(--mu)}.zm button{border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:8px;padding:4px 12px;font:inherit}.ev{display:flex;gap:8px;align-items:flex-start}.ev>b{min-width:54px;font-size:.8em;color:var(--mu);padding-top:14px}.ev>.card{flex:1}
+label{display:block;font-size:13px;color:var(--mu);margin:8px 0}input,select,textarea{display:block;width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;margin-top:3px}textarea{min-height:60px}
+.mb{position:fixed;inset:0;background:#0008;z-index:20;display:flex;align-items:flex-end}.md{background:var(--cd);width:100%;max-height:88%;overflow:auto;border-radius:16px 16px 0 0;overscroll-behavior:contain;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}.card{position:relative}.card.sel{outline:2px solid var(--ac);box-shadow:0 0 0 4px #2f6f5e44}.sk{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--mu);display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent}.sel .sk{background:var(--ac);border-color:var(--ac);color:#fff}.selm .tt{padding-right:30px}.selm .card button:not(.vb),.selm .card a,.selm .card label,.selm .card input{pointer-events:none}.sbar{align-items:center;gap:8px;padding:10px}.sbar{flex-wrap:wrap}.sbar span{flex:1 1 100%;font-size:13px}.sbar .b{flex:1;width:auto;margin:0;padding:10px 14px}details.rd{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:8px 0}details.rd summary{cursor:pointer}details.rd input{display:inline-block;width:auto;margin:0 8px 0 0}.rb{margin-top:8px;font-size:.93em;display:grid;gap:4px}.rt{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:8px 12px;margin:8px 0}.rt summary{cursor:pointer}.rcb{display:block;width:24px;height:24px;margin:0;flex:none}.rr .r3{align-items:center;gap:12px}.dw{display:flex;gap:4px;margin:8px 0}.dl{flex:1;text-align:center;margin:0;border:1px solid var(--bd);border-radius:8px;padding:6px 0;font-size:12px;color:var(--tx)}.dl input{display:block;margin:0 auto 4px;width:auto}.hn{width:42px;height:4px;border-radius:2px;background:var(--bd);margin:-6px auto 12px}.lg{font-size:12px;color:var(--mu);margin:8px 0}
+footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--bd);z-index:6;padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar{display:flex;gap:6px;padding:8px 10px}.bar input{margin:0}.bar button{border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:0 12px;font-size:18px;color:var(--tx)}.bar button.on{background:var(--r)}
+nav{display:flex}nav button{flex:1;border:0;background:none;padding:10px 0;font:inherit;font-size:12px;white-space:nowrap;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
+#tt{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 14px;border-radius:20px;opacity:0;transition:.2s;z-index:30;pointer-events:none;font-size:14px;max-width:90%}#tt.on{opacity:1;pointer-events:auto}
+</style></head><body>
+<header><b>✅ Tarefas</b><span><button id="me" onclick="S.me=S.me==='eu'?'ela':'eu';render()"></button><button onclick="imp()">⤓</button><button onclick="bell()">🔔</button><button onclick="tp()">＋ Modelo</button></span></header>
+<main id="app"></main><div id="m"></div><div id="tt"></div>
+<footer><div id="sb" class="sbar" style="display:none"></div><div class="bar"><input id="q" placeholder="Anotar rápido ou falar…" onkeydown="if(event.key==='Enter')add()"><button id="mb" onclick="mic()">🎤</button><button onclick="add()">＋</button></div>
+<nav><button data-v="hoje" onclick="go('hoje')">🎯 Hoje</button><button data-v="quadro" onclick="go('quadro')">🗂 Quadro</button><button data-v="agenda" onclick="go('agenda')">📅 Agenda</button><button data-v="depois" onclick="go('depois')">⏳ Mais tarde</button><button data-v="rotinas" onclick="go('rotinas')">🔁 Rotinas</button></nav></footer>
+<script>
+const $=s=>document.querySelector(s),ymd=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
+td=()=>ymd(),ad=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return ymd(d)},
+dd=(a,b)=>Math.round((new Date(a+'T12:00')-new Date(b+'T12:00'))/864e5),
+esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+uid=()=>Math.random().toString(36).slice(2,9);
+const ST=[['ideia','Ideia'],['fazer','A fazer'],['fazendo','Fazendo'],['aguardando','Aguardando'],['feito','Feito']],WHO={eu:'Eu',ela:'Esposa',nos:'Nós'};
+function mk(o){return Object.assign({id:uid(),t:'',st:'fazer',pri:1,due:'',tm:'',who:'eu',priv:false,c:'eu',next:'',wn:'',ph:'',ch:'',subs:[],nt:'',log:[],min:0,foc:false,rec:'',per:0,ant:14,lt:false,up:td()},o)}
+function seed(){const t=td();return[
+mk({t:'Consertar vazamento da pia',st:'aguardando',next:'Ligar para o João e cobrar a visita',wn:'João (encanador)',ph:'11999990000',ch:t,due:ad(t,3),up:ad(t,-6),pri:2}),
+mk({t:'Renovar seguro do carro',next:'Pedir 3 cotações',due:t,foc:true,min:5,subs:[{t:'Cotação 1',d:1},{t:'Cotação 2',d:0}]}),
+mk({t:'Reunião de pais na escola',due:ad(t,1),tm:'19:00',who:'nos'}),
+mk({t:'Presente de aniversário (surpresa)',st:'ideia',priv:true})]}
+let S;try{S=JSON.parse(localStorage.getItem('tf1'))}catch(e){}
+S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];
+const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}},
+T=id=>S.tasks.find(t=>t.id===id),V=()=>S.tasks.filter(t=>(!t.priv||t.c===S.me)&&!t.lt),
+go=v=>{S.view=v;render()};
+let tmr;function toast(m,a){const e=$('#tt');e.innerHTML=esc(m)+(a?' <u onclick="undo()" style="cursor:pointer;margin-left:10px;font-weight:700">Desfazer</u>':'');e.className='on';clearTimeout(tmr);tmr=setTimeout(()=>e.className='',a?7000:2600)}
+let P=[];
+let H=0,HB=0;
+function modal(h){if(!H){try{history.pushState({m:1},'');H=1}catch(e){}}$('#m').innerHTML=`<div class="mb" onclick="if(event.target===this)cl()"><div class="md"><div class="hn"></div>${h}</div></div>`}
+function cl(){$('#m').innerHTML='';setTimeout(hx,0)}
+function hx(){if(H&&!$('#m').innerHTML){H=0;HB++;setTimeout(()=>{HB=0},700);try{history.back()}catch(e){HB=0}}}
+window.addEventListener('popstate',()=>{if(HB>0){HB--;return}if(H){H=0;$('#m').innerHTML=''}});
+let Y=null;
+document.addEventListener('touchstart',e=>{const m=e.target.closest('.md');if(!m||e.target.closest('input,textarea,select')){Y=null;return}Y={m,y:e.touches[0].clientY,d:0,ok:m.scrollTop<=0}},{passive:true});
+document.addEventListener('touchmove',e=>{if(!Y||!Y.ok)return;const d=e.touches[0].clientY-Y.y;if(d<=0){Y.d=0;Y.m.style.transform='';return}if(e.cancelable)e.preventDefault();Y.d=d;Y.m.style.transition='none';Y.m.style.transform=`translateY(${d}px)`},{passive:false});
+document.addEventListener('touchend',()=>{if(!Y)return;const y=Y;Y=null;if(!y.d)return;y.m.style.transition='transform .2s';if(y.d>90){y.m.style.transform='translateY(100%)';setTimeout(cl,160)}else y.m.style.transform=''});
+function pick(t,o){P=o;modal(`<h3>${t}</h3>`+o.map((x,i)=>`<button class="b g" onclick="P[${i}][1]()">${x[0]}</button>`).join(''))}
+function lg(t,m){t.log.push({d:td(),m});t.up=td()}
+function gc(t){const a=t.due.replace(/-/g,'');let d;if(t.tm){const h=+t.tm.slice(0,2);d=a+'T'+t.tm.replace(':','')+'00/'+a+'T'+String(Math.min(h+1,23)).padStart(2,'0')+t.tm.slice(3)+'00'}else d=a+'/'+ad(t.due,1).replace(/-/g,'');return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t.t)+'&dates='+d+'&details='+encodeURIComponent(t.next||t.nt)}
+function card(t,b){const dn=t.st==='feito',age=dd(td(),t.up),ac=age>=7?'cr':age>=3?'cy':'cg',sd=t.subs.filter(s=>s.d).length,w=t.st==='aguardando',dg=(t.ph||'').replace(/\D/g,''),wa=dg.length<=11?'55'+dg:dg;
+return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${t.foc?'⭐ ':''}${esc(t.t)}</div><div class="ch">${t.due?`<span class="c${t.due<td()&&!dn?' cr':''}">📅 ${t.due.slice(8)}/${t.due.slice(5,7)}${t.tm?' '+t.tm:''}</span>`:''}<span class="c">${t.who==='nos'?'👫':t.who==='ela'?'👩':'👤'} ${WHO[t.who]}</span>${t.priv?'<span class="c">🔒</span>':''}${t.min?`<span class="c">⏱ ${t.min}min</span>`:''}${!dn&&age>0?`<span class="c ${ac}">${age}d parada</span>`:''}</div>`
++(dn?'':t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')
++(w?`<div class="wt">⏳ ${esc(t.wn||'alguém')}${t.ch?' · cobrar '+t.ch.slice(8)+'/'+t.ch.slice(5,7):''}<div class="r3">${dg?`<a class="b g" href="tel:${dg}">📞 Ligar</a><a class="b g" target="_blank" href="https://wa.me/${wa}">💬 Zap</a>`:''}<button class="b" onclick="cb('${t.id}')">Cobrei</button></div></div>`:'')
++(t.subs.length?`<div class="pg"><i style="width:${sd/t.subs.length*100}%"></i></div>`+t.subs.map((s,i)=>`<label class="ck"><input type="checkbox"${s.d?' checked':''} onchange="sub('${t.id}',${i})"> ${esc(s.t)}</label>`).join(''):'')
++(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="fc('${t.id}')">⭐</button><button onclick="sn('${t.id}')">💤</button><button onclick="hp('${t.id}')">🤝</button>${t.due?`<a href="${gc(t)}" target="_blank">🗓</a>`:''}<button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
+function sub(id,i){const t=T(id);t.subs[i].d^=1;t.up=td();render()}
+function fc(id){const t=T(id);t.foc=!t.foc;render()}
+function mv(id,d){const t=T(id),i=ST.findIndex(s=>s[0]===t.st)+d;if(i<0||i>4)return;t.st=ST[i][0];lg(t,'→ '+ST[i][1]);render()}
+let U=null;
+function undo(){if(!U)return;if(U.bulk){S.tasks.push(...U.bulk);U=null;toast('Desfeito');render();return}Object.assign(T(U.id),JSON.parse(U.s));S.sk=U.sk;if(U.nid)S.tasks=S.tasks.filter(x=>x.id!==U.nid);U=null;toast('Desfeito');render()}
+function fin(id){const t=T(id);if(t.st==='feito'){t.st='fazer';lg(t,'Reaberta')}else{U={id,s:JSON.stringify(t),sk:{...S.sk},nid:null};t.st='feito';t.foc=false;lg(t,'Concluída');
+if(S.sk.l!==td()){S.sk.n=S.sk.l===ad(td(),-1)?S.sk.n+1:1;S.sk.l=td()}
+if(t.per){const n=mk({...t,id:uid(),st:'fazer',lt:true,log:[],subs:t.subs.map(s=>({t:s.t,d:0})),due:addm(td(),t.per),up:td(),foc:false});S.tasks.push(n);U.nid=n.id}toast('Feito! 🎉'+(U.nid?' Volta no Mais tarde.':''),1)}render()}
+function sn(id){const t=T(id),s=(d,tm)=>()=>{t.due=d;if(tm)t.tm=tm;lg(t,'Adiada para '+d);cl();render()},sat=ad(td(),(6-new Date().getDay()+7)%7||7);
+pick('Adiar para…',[['🌙 Hoje à noite',s(td(),'20:00')],['☀️ Amanhã',s(ad(td(),1))],['🏖 Fim de semana',s(sat)]])}
+function cb(id){const t=T(id),s=n=>()=>{t.ch=ad(td(),n);lg(t,'Cobrou '+t.wn+'. Nova cobrança: '+t.ch);cl();render()};pick('Cobrei! Cobrar de novo em…',[['Amanhã',s(1)],['3 dias',s(3)],['1 semana',s(7)]])}
+function hp(id){const o=S.me==='eu'?'ela':'eu';modal(`<h3>🤝 Pedir ajuda a ${WHO[o]}</h3><label>Comentário<textarea id="hc"></textarea></label><button class="b" onclick="hg('${id}','${o}')">Enviar</button>`)}
+function hg(id,o){const t=T(id);t.who=o;t.priv=false;lg(t,'Pedido a '+WHO[o]+': '+$('#hc').value);cl();render()}
+function fd(){const L=V().filter(t=>t.st!=='feito'&&t.st!=='aguardando');modal(`<h3>🌙 Fechar o dia</h3><p class="mu">Escolha as tarefas de foco para amanhã.</p><div class="pl">${L.map(t=>`<label class="ck"><input type="checkbox" value="${t.id}"${t.foc?' checked':''}> ${esc(t.t)}</label>`).join('')||'Nada pendente 🎉'}</div><button class="b" onclick="fg()">Pronto</button>`)}
+function fg(){const c=[...document.querySelectorAll('.pl input')].filter(x=>x.checked).map(x=>x.value);V().forEach(t=>{if(c.includes(t.id)){t.foc=true;if(!t.due||t.due<=td())t.due=ad(td(),1)}else if(t.st!=='aguardando')t.foc=false});cl();render()}
+function tp(){pick('Modelo',[['🔧 Contratar prestador',()=>{cl();edit(null,{t:'Contratar ',subs:['Pedir orçamentos','Comparar','Agendar','Pagar','Avaliar'].map(x=>({t:x,d:0}))})}],['💳 Conta do mês',()=>{cl();edit(null,{t:'Pagar ',rec:'m',due:td(),subs:[{t:'Conferir valor',d:0},{t:'Pagar',d:0}]})}],['Em branco',()=>{cl();edit()}]])}
+function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;
+const o=(a,v)=>a.map(([k,l])=>`<option value="${k}"${k==v?' selected':''}>${l}</option>`).join(''),i=(k,l,ty)=>`<label>${l}<input id="f${k}" type="${ty||'text'}" value="${esc(t[k]||'')}"></label>`;
+modal(`<h3>${id?'Editar':'Nova'} tarefa</h3>${i('t','Título')}${i('next','Próxima ação (passo físico, ex.: ligar para…)')}
+<div class="r2"><label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde']]),t.lt?'depois':t.st)}</select></label><label>Prioridade<select id="fpri">${o([[0,'Pode esperar'],[1,'Importante'],[2,'Urgente']],t.pri)}</select></label></div>
+<div class="r2"><label>Responsável<select id="fwho">${o(Object.entries(WHO),t.who)}</select></label><label>Ao concluir, voltar em<select id="fper">${o([[0,'Não repetir'],[1,'1 mês'],[3,'3 meses'],[6,'6 meses'],[12,'1 ano'],[24,'2 anos']],t.per||0)}</select></label></div>
+<label class="ck"><input id="fpv" type="checkbox"${t.priv?' checked':''}> 🔒 Só eu posso ver</label>
+<div class="r2">${i('due','Data','date')}${i('tm','Hora','time')}</div><div class="r2"><label>Outro prazo (meses)<input id="fper2" type="number" min="1" value="${t.per&&![1,3,6,12,24].includes(t.per)?t.per:''}"></label>${i('ant','Voltar quantos dias antes?','number')}</div>${i('min','Minutos estimados','number')}
+<div class="r2">${i('wn','Aguardando quem?')}${i('ph','Telefone','tel')}</div>${i('ch','Cobrar em','date')}
+<label>Subtarefas (uma por linha)<textarea id="fsb">${esc(t.subs.map(s=>s.t).join('\n'))}</textarea></label>
+<label>Anotações<textarea id="fnt">${esc(t.nt)}</textarea></label>
+${t.log.length?`<div class="lg">${t.log.slice(-4).map(l=>l.d+': '+esc(l.m)).join('<br>')}</div>`:''}
+<div class="r2"><button class="b" onclick="sv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rm('${t.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`)}
+function sv(ex){const t=window._t,g=k=>$('#f'+k).value;if(!g('t').trim())return toast('Dê um título');if(g('st')==='depois'&&!g('due'))return toast('Mais tarde precisa de uma data');
+Object.assign(t,{t:g('t').trim(),next:g('next'),st:g('st')==='depois'?'fazer':g('st'),lt:g('st')==='depois',per:+g('per2')||+g('per')||0,ant:g('ant')===''?14:+g('ant'),pri:+g('pri'),who:g('who'),priv:$('#fpv').checked,due:g('due'),tm:g('tm'),min:+g('min')||0,wn:g('wn'),ph:g('ph'),ch:g('ch'),nt:g('nt')});
+const old=t.subs;t.subs=g('sb').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,d:(old.find(s=>s.t===x)||{}).d||0}));
+t.up=td();if(!ex)S.tasks.push(t);cl();render()}
+function rm(id){SEL.delete(id);S.tasks=S.tasks.filter(t=>t.id!==id);cl();render()}
+function sm(x){x=x.trim().replace(/\s+/g,' ');const l=x.toLowerCase();let d='';if(/amanh[ãa]/.test(l))d=ad(td(),1);else if(/\bhoje\b/.test(l))d=td();
+let t=x,n='';if(x.length>70){t=x.split(/[.!?;]/)[0]||x;if(t.length>60)t=t.slice(0,60).replace(/\s\S*$/,'')+'…';n=x}
+return{t:t[0].toUpperCase()+t.slice(1),nt:n,due:d,st:d?'fazer':'ideia'}}
+function add(){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me,...sm(v)}));$('#q').value='';toast('Tarefa criada');render()}
+let rc;function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Sem voz neste navegador. Use o microfone do teclado.');if(rc){rc.stop();return}
+rc=new R();rc.lang='pt-BR';rc.interimResults=true;rc.onresult=e=>{$('#q').value=[...e.results].map(r=>r[0].transcript).join(' ')};rc.onerror=e=>toast('Microfone indisponível ('+e.error+'). Use o do teclado.');
+rc.onend=()=>{rc=null;$('#mb').classList.remove('on');if($('#q').value.trim())add()};$('#mb').classList.add('on');try{rc.start()}catch(e){rc=null}}
+function bell(){if(!('Notification' in window))return toast('Sem suporte a notificações aqui');Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas':'Permissão negada')).catch(()=>toast('Não foi possível ativar'))}
+function notify(k,m){if(S.nt[k])return;S.nt[k]=1;save();toast(m);try{if(Notification.permission!=='granted')return;const sw=navigator.serviceWorker;if(sw&&sw.controller)sw.ready.then(r=>r.showNotification('Tarefas',{body:m,icon:'icon-192.png',badge:'icon-192.png',tag:k}));else new Notification('Tarefas',{body:m})}catch(e){}}
+function tick(){wake();const n=new Date(),h=n.getHours()*60+n.getMinutes();V().forEach(t=>{if(t.st==='feito')return;
+if(t.ch&&t.ch<=td()&&h>=540)notify('c'+t.id+t.ch,'Hora de cobrar '+(t.wn||'')+': '+t.t);
+if(t.due===td()&&t.tm){const m=+t.tm.slice(0,2)*60+ +t.tm.slice(3);if(h>=m-10&&h<m+60)notify('e'+t.id+t.tm,'Às '+t.tm+': '+t.t)}})}
+function vh(){const x=td();let L=V().filter(t=>t.st!=='feito');const sec=(h,a,e)=>a.length?`<h4>${h}</h4>`+a.map(y=>card(y)).join(''):e?`<h4>${h}</h4><p class="mu">${e}</p>`:'';
+const sk=S.sk.l===x||S.sk.l===ad(x,-1)?S.sk.n:0;
+let b=`<div class="hd"><b>${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</b><div class="mu">🔥 ${sk} dia(s) seguidos concluindo tarefas</div></div><div class="r2"><button class="b ${S.five?'':'g'}" onclick="S.five=!S.five;render()">⚡ Modo 5 min</button><button class="b g" onclick="fd()">🌙 Fechar o dia</button></div>`+rstrip();
+if(S.five)return b+sec('Tarefas de até 5 minutos',L.filter(t=>t.min&&t.min<=5),'Nenhuma tarefa de 5 min ou menos. Preencha "minutos estimados".');
+const c=L.filter(t=>t.st==='aguardando'&&t.ch&&t.ch<=x),f=L.filter(t=>!c.includes(t)&&(t.foc||(t.due&&t.due<=x&&t.st!=='aguardando'))).sort((a,b)=>b.pri-a.pri),p=L.filter(t=>!c.includes(t)&&!f.includes(t)&&dd(x,t.up)>=5);
+return b+sec('📞 Cobrar hoje',c)+sec('🎯 Foco de hoje',f,'Nada em foco. Use ⭐ numa tarefa ou "Fechar o dia".')+sec('🧊 Paradas há 5+ dias',p)}
+function vq(){const n=V().filter(t=>t.st==='ideia').length;return(S.hi?`<div class="col mini" data-st="ideia" onclick="S.hi=0;render()">💡 ${n}</div>`:'')+'<div class="bd">'+ST.map(([k,l])=>{const a=V().filter(t=>t.st===k);
+if(k==='ideia'&&S.hi)return'';
+return`<div class="col" data-st="${k}"><h4>${l} <span class="mu">${a.length}</span>${k==='ideia'?' <button class="hb" onclick="S.hi=1;render()">🙈 Esconder</button>':''}</h4>${a.map(x=>card(x,1)).join('')}</div>`}).join('')+'</div>'}
+function va(){const s=ad(td(),S.wk*7);let h=`<div class="r2"><button class="b g" onclick="S.wk--;render()">◀ Semana</button><button class="b g" onclick="S.wk++;render()">Semana ▶</button></div>`;
+for(let i=0;i<7;i++){const d=ad(s,i),a=V().filter(t=>t.due===d&&t.st!=='feito').sort((x,y)=>(x.tm||'').localeCompare(y.tm||''));
+h+=`<h4>${new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'})}${d===td()?' · hoje':''}</h4>`+(a.length?a.map(x=>`<div class="ev"><b>${x.tm||'dia todo'}</b>${card(x)}</div>`).join(''):'<p class="mu">—</p>')}return h}
+function imp(){modal(`<h3>⤓ Importar do Google Tarefas</h3><p class="mu">Cole uma tarefa por linha, ou envie o arquivo Tasks.json exportado pelo Google Takeout.</p><label>Colar lista<textarea id="ip"></textarea></label><button class="b" onclick="ip1()">Importar texto</button><label>Arquivo do Takeout (.zip ou .json)<input type="file" id="if" onchange="toast('Lendo arquivo…');ip2(this.files[0])"></label><h4>Backup</h4><button class="b g" onclick="bk1()">Gerar backup e copiar</button><label>Texto do backup (cole aqui para restaurar)<textarea id="bkt"></textarea></label><button class="b g" onclick="bk2()">Restaurar (substitui tudo)</button>`)}
+function bk1(){const t=$('#bkt');t.value=JSON.stringify(S);t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Backup copiado'),()=>toast('Copie o texto manualmente'))}catch(e){toast('Copie o texto manualmente')}}
+function bk2(){try{const j=JSON.parse($('#bkt').value);if(!Array.isArray(j.tasks))throw 0;S=j;S.z=S.z||1;S.rot=S.rot||[];S.nt=S.nt||{};S.view='hoje';cl();render();toast('Backup restaurado')}catch(e){toast('Texto de backup inválido')}}
+function ip1(){const a=$('#ip').value.split('\n').map(x=>x.trim()).filter(Boolean);a.forEach(x=>S.tasks.push(mk({c:S.me,t:x,st:'ideia'})));cl();toast(a.length+' tarefas importadas');render()}
+async function ip2(f){if(!f)return;try{const fs=[];
+if(/\.zip$/i.test(f.name)){const z=await JSZip.loadAsync(f);for(const k of Object.keys(z.files))if(/\.json$/i.test(k)&&!z.files[k].dir)fs.push(await z.files[k].async('string'))}else fs.push(await f.text());
+let n=0,w=0,kp=0,ks='',sx='',sxd=0;
+for(const x of fs){let j;try{j=JSON.parse(x)}catch(e){continue}
+if(!j||typeof j!=='object')continue;
+if(Array.isArray(j.items)){j.items.forEach(l=>l&&(l.items||[]).forEach(i=>{if(!i||i.status==='completed'||!i.title)return;if(!ks)ks=Object.keys(i).join(', ');
+const dk=Object.keys(i).find(k=>/due|prazo/i.test(k)),sc=Array.isArray(i.scheduled_time)?(i.scheduled_time.find(q=>q&&q.current)||i.scheduled_time[0]):null;let ok='';if(dk){const dt=String(i[dk]).slice(0,10);if(/^\d{4}-\d\d-\d\d$/.test(dt))ok=dt}else if(sc&&sc.start){const d=new Date(sc.start);if(!isNaN(d))ok=ymd(d)}if(ok)w++;if(!sx||(!sxd&&ok)){sx=JSON.stringify(i).slice(0,700);sxd=ok?1:0}
+const ex=S.tasks.find(t=>t.t===i.title);if(ex){if(!ex.due&&ok)ex.due=ok;return}
+S.tasks.push(mk({c:S.me,t:i.title,nt:((i.notes||'')+(l.title?'\nLista: '+l.title:'')).trim(),due:ok,st:'fazer'}));n++}))}
+else if('textContent' in j||'listContent' in j){if(j.isTrashed)continue;
+const ls=(j.listContent||[]).map(y=>({t:String(y.text||'').trim(),d:y.isChecked?1:0})).filter(y=>y.t);if(ls.length&&ls.every(y=>y.d))continue;
+const tx=String(j.textContent||'').trim(),t=(j.title||tx.split('\n')[0]||(ls[0]&&ls[0].t)||'').trim().slice(0,70);
+if(!t||S.tasks.find(y=>y.t===t))continue;S.tasks.push(mk({c:S.me,t,st:'ideia',subs:ls,nt:(tx+'\nImportado do Keep').trim()}));kp++}}
+modal(`<h3>Importação</h3><p>Google Tarefas: ${n} novas (${w} com data).</p><p>Keep: ${kp} notas, na etapa Ideia.</p><p class="mu">Arquivos lidos: ${fs.length}${ks?'. Campos: '+esc(ks):''}</p>${sx?`<p class="mu">Exemplo de tarefa no arquivo:</p><pre style="white-space:pre-wrap;word-break:break-all;font-size:11px">${esc(sx)}</pre>`:''}<button class="b" onclick="cl();render()">Ok</button>`);render()}
+catch(e){toast('Erro ao importar: '+(e&&e.message||e)+'. Tente colar a lista.')}}
+function lim(){const L=V().filter(t=>t.st==='ideia');modal(`<h3>🧹 Limpar Ideias</h3><p class="mu">${L.length} itens. Marque e escolha o que fazer.</p><button class="b g" onclick="document.querySelectorAll('.pl input').forEach(x=>x.checked=true)">Marcar todas</button><div class="pl">${L.map(t=>`<label class="ck"><input type="checkbox" value="${t.id}"> ${esc(t.t)}</label>`).join('')||'Nada na caixa 🎉'}</div><div class="r2"><button class="b" onclick="lm('fazer')">Mover p/ A fazer</button><button class="b d" onclick="lm('del')">Excluir</button></div>`)}
+function lm(a){const c=[...document.querySelectorAll('.pl input')].filter(x=>x.checked).map(x=>x.value);if(!c.length)return toast('Marque pelo menos uma');
+if(a==='del'){U={bulk:S.tasks.filter(t=>c.includes(t.id))};S.tasks=S.tasks.filter(t=>!c.includes(t.id));cl();render();toast(c.length+' excluídas',1)}else{c.forEach(id=>{const t=T(id);t.st='fazer';lg(t,'→ A fazer')});cl();render();toast(c.length+' movidas para A fazer')}}
+function zm(d){S.z=Math.min(1.5,Math.max(.5,Math.round((S.z+d)*10)/10));render()}
+let D=null,nc=0,SEL=new Set();const isI=t=>t.closest('button,a,input,label,select,textarea');
+function ds(e){if(D||$('#m').innerHTML)return;const c=e.target.closest('.card[data-id]');if(!c||isI(e.target)||(!e.touches&&(e.button||S.view!=='quadro')))return;const p=e.touches?e.touches[0]:e;
+D={c,id:c.dataset.id,x:p.clientX,y:p.clientY,px:p.clientX,py:p.clientY,on:0,t:!!e.touches};if(D.t)D.tm=setTimeout(db,320)}
+function db(){if(!D)return;if(S.view!=='quadro'){const i=D.id;D=null;tg(i);return}D.on=1;const r=D.c.getBoundingClientRect(),g=D.c.cloneNode(true);D.ox=D.x-r.left;D.oy=D.y-r.top;
+g.style.cssText=`position:fixed;z-index:40;pointer-events:none;margin:0;width:${r.width}px;left:${r.left}px;top:${r.top}px;opacity:.92;box-shadow:0 8px 24px #0006;font-size:${getComputedStyle($('main')).fontSize}`;
+document.body.appendChild(g);D.g=g;D.c.style.opacity='.3';try{navigator.vibrate(15)}catch(e){}D.iv=setInterval(as,30)}
+function as(){if(!D||!D.on)return;const b=$('.bd');if(b){if(D.px<50)b.scrollLeft-=14;else if(D.px>innerWidth-50)b.scrollLeft+=14}if(D.py<130)scrollBy(0,-12);else if(D.py>innerHeight-170)scrollBy(0,12)}
+function dm(e){if(!D)return;const p=e.touches?e.touches[0]:e;D.px=p.clientX;D.py=p.clientY;
+if(!D.on){const m=Math.hypot(p.clientX-D.x,p.clientY-D.y);if(D.t){if(m>10){clearTimeout(D.tm);D=null}}else if(m>6)db();return}
+if(e.cancelable)e.preventDefault();D.g.style.left=(p.clientX-D.ox)+'px';D.g.style.top=(p.clientY-D.oy)+'px';
+const o=document.elementFromPoint(p.clientX,p.clientY),c=o&&o.closest('.col');document.querySelectorAll('.col').forEach(x=>x.classList.toggle('ov',x===c))}
+function de(){if(!D)return;clearTimeout(D.tm);const d=D;D=null;if(!d.on)return;clearInterval(d.iv);d.g.remove();d.c.style.opacity='';nc=Date.now();if(d.t&&Math.hypot(d.px-d.x,d.py-d.y)<12){tg(d.id);return}
+document.querySelectorAll('.col').forEach(x=>x.classList.remove('ov'));
+const o=document.elementFromPoint(d.px,d.py),c=o&&o.closest('.col'),t=T(d.id);if(!c||!t||c.dataset.st===t.st)return;const k=c.dataset.st;
+if(k==='feito')fin(d.id);else{t.st=k;lg(t,'→ '+ST.find(s=>s[0]===k)[1]);render()}}
+document.addEventListener('touchstart',ds,{passive:true});document.addEventListener('touchmove',dm,{passive:false});document.addEventListener('touchend',de);document.addEventListener('touchcancel',de);
+document.addEventListener('mousedown',ds);document.addEventListener('mousemove',dm);document.addEventListener('mouseup',de);
+document.addEventListener('contextmenu',e=>{if(D&&D.on)e.preventDefault()});
+document.addEventListener('click',e=>{const c=e.target.closest('.card[data-id]');if(!c||Date.now()-nc<500)return;const id=c.dataset.id;
+if(SEL.size){if(e.target.closest('.vb'))edit(id);else tg(id);return}
+if(e.ctrlKey||e.metaKey||e.shiftKey){tg(id);return}
+if(isI(e.target))return;edit(id)});
+function tg(id){SEL.has(id)?SEL.delete(id):SEL.add(id);nc=Date.now();try{navigator.vibrate(15)}catch(e){}render()}
+function scl(){SEL.clear();render()}
+function sbr(){const n=SEL.size,b=$('#sb');b.style.display=n?'flex':'none';$('.bar').style.display=n?'none':'';if(n)b.innerHTML=`<span>${n} selecionada${n>1?'s':''}</span><button class="b" onclick="rv()">🔍 Revisar e excluir</button><button class="b g" onclick="scl()">Cancelar</button>`}
+function det(t){const r=(l,v)=>v?`<div><span class="mu">${l}</span> ${esc(v)}</div>`:'',fd=x=>x?x.split('-').reverse().join('/'):'';
+return r('Próxima ação:',t.next)+r('Prazo:',t.due?fd(t.due)+(t.tm?' '+t.tm:''):'')+r('Responsável:',WHO[t.who]+(t.priv?' · 🔒 privada':''))+r('Aguardando:',t.wn?t.wn+(t.ph?' ('+t.ph+')':''):'')+r('Cobrar em:',fd(t.ch))
++(t.subs.length?'<div class="mu">Subtarefas</div>'+t.subs.map(q=>`<div>${q.d?'☑':'☐'} ${esc(q.t)}</div>`).join(''):'')
++(t.nt?`<div class="mu">Anotações</div><div style="white-space:pre-wrap">${esc(t.nt)}</div>`:'')
++(t.log.length?'<div class="mu">Histórico</div>'+t.log.slice(-4).map(l=>`<div class="mu">${l.d}: ${esc(l.m)}</div>`).join(''):'')}
+function rv(){const L=[...SEL].map(T).filter(Boolean);if(!L.length){scl();return}
+modal(`<h3>🔍 Revisar ${L.length} tarefa${L.length>1?'s':''}</h3><p class="mu">Toque em cada uma para ver os detalhes. Desmarque as que quiser manter.</p>`+L.map(t=>`<details class="rd"><summary><input type="checkbox" class="rk" value="${t.id}" checked onclick="event.stopPropagation()">${esc(t.t)} <span class="mu">· ${ST.find(q=>q[0]===t.st)[1]}</span></summary><div class="rb">${det(t)}</div></details>`).join('')+`<div class="r2"><button class="b d" onclick="rx()">Excluir marcadas</button><button class="b g" onclick="cl()">Voltar</button></div>`)}
+function rx(){const ids=[...document.querySelectorAll('.rk')].filter(x=>x.checked).map(x=>x.value);if(!ids.length)return toast('Nenhuma marcada');
+U={bulk:S.tasks.filter(t=>ids.includes(t.id))};S.tasks=S.tasks.filter(t=>!ids.includes(t.id));SEL.clear();cl();render();toast(ids.length+' excluída'+(ids.length>1?'s':''),1)}
+const DS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],fm=x=>x?x.slice(8)+'/'+x.slice(5,7)+(x.slice(0,4)!==td().slice(0,4)?'/'+x.slice(2,4):''):'',
+perl=n=>n%12===0?(n===12?'1 ano':n/12+' anos'):n+(n===1?' mês':' meses'),wd=t=>ad(t.due,-(t.ant==null?14:t.ant));
+function addm(d,m){const x=new Date(d+'T12:00');x.setMonth(x.getMonth()+m);return ymd(x)}
+function wake(){let c=0;S.tasks.forEach(t=>{if(t.lt&&t.due&&wd(t)<=td()){t.lt=false;t.st='fazer';t.foc=true;lg(t,'Voltou do Mais tarde');c++;if(!t.priv||t.c===S.me)notify('w'+t.id+t.due,'Voltou do Mais tarde: '+t.t)}});if(c){save();if(S.rot)render()}}
+function wk1(id){const t=T(id);t.lt=false;t.st='fazer';t.foc=true;lg(t,'Trazida do Mais tarde');render()}
+function vl(){const L=S.tasks.filter(t=>t.lt&&(!t.priv||t.c===S.me)).sort((a,b)=>wd(a).localeCompare(wd(b)));
+return'<p class="mu">Tarefas escondidas. Voltam sozinhas para o A fazer perto da data.</p>'+(L.map(t=>`<div class="card${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${esc(t.t)}</div><div class="ch"><span class="c">🔁 volta em ${fm(wd(t))} · faltam ${Math.max(0,dd(wd(t),td()))}d</span><span class="c">🗓 fazer até ${fm(t.due)}</span>${t.per?`<span class="c">↻ a cada ${perl(t.per)}</span>`:''}</div>`+(t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')+(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="wk1('${t.id}')">⏩ Trazer agora</button><button onclick="edit('${t.id}')">✏️</button></div>`)+'</div>').join('')||'<p class="mu">Nada por aqui. Numa tarefa, toque em ✏️ e escolha a etapa "Mais tarde".</p>')}
+function sch(r,d){const x=new Date(d+'T12:00');if(r.k==='w')return r.d.includes(x.getDay());return x.getDate()===Math.min(r.m,new Date(x.getFullYear(),x.getMonth()+1,0).getDate())}
+function rs(r){let n=0;for(let i=0;i<400;i++){const d=ad(td(),-i);if(!sch(r,d))continue;if(r.log.includes(d))n++;else if(d!==td())break}return n}
+function rnext(r){for(let i=0;i<62;i++){const d=ad(td(),i);if(sch(r,d))return d}return''}
+const rdesc=r=>r.k==='w'?r.d.slice().sort().map(i=>DS[i]).join(', '):'dia '+r.m,RV=()=>S.rot.filter(r=>!r.priv||r.c===S.me);
+function rt(id){const r=S.rot.find(x=>x.id===id),t=td(),i=r.log.indexOf(t);if(i<0){r.log.push(t);r.log=r.log.slice(-400);try{navigator.vibrate(10)}catch(e){}}else r.log.splice(i,1);render()}
+let RO=false;
+function rstrip(){const t=td(),R=RV().filter(r=>sch(r,t));if(!R.length)return'';const p=R.filter(r=>!r.log.includes(t)).length;
+return`<details class="rt"${RO?' open':''} ontoggle="RO=this.open"><summary>🔁 Rotinas de hoje · ${p?p+' pendente'+(p>1?'s':''):'tudo feito ✅'}</summary>${R.map(r=>`<label class="ck"><input type="checkbox"${r.log.includes(t)?' checked':''} onchange="rt('${r.id}')"> <span${r.log.includes(t)?' style="text-decoration:line-through;opacity:.6"':''}>${esc(r.t)}</span></label>`).join('')}</details>`}
+function vr(){const t=td(),R=RV(),hj=R.filter(r=>sch(r,t)),ou=R.filter(r=>!sch(r,t)).sort((a,b)=>rnext(a).localeCompare(rnext(b)));
+const row=(r,h)=>`<div class="card rr" onclick="redit('${r.id}')"><div class="r3">${h?`<input type="checkbox" class="rcb"${r.log.includes(t)?' checked':''} onclick="event.stopPropagation()" onchange="rt('${r.id}')">`:''}<div style="flex:1"><div class="tt"${h&&r.log.includes(t)?' style="text-decoration:line-through;opacity:.6"':''}>${esc(r.t)}</div><div class="mu">${rdesc(r)}${h?'':' · próxima '+fm(rnext(r))} · 🔥 ${rs(r)} seguidas</div></div></div></div>`;
+return`<button class="b" onclick="redit()">＋ Nova rotina</button>`+(hj.length?'<h4>Hoje</h4>'+hj.map(r=>row(r,1)).join(''):'')+(ou.length?'<h4>Outras rotinas</h4>'+ou.map(r=>row(r,0)).join(''):'')+(R.length?'':'<p class="mu">Nenhuma rotina ainda. Ex.: lavar roupa (seg e qui) ou pagar condomínio (dia 3).</p>')}
+function redit(id){const r=id?S.rot.find(x=>x.id===id):{id:uid(),t:'',k:'w',d:[],m:1,log:[],c:S.me,priv:false};window._r=r;
+modal(`<h3>${id?'Editar':'Nova'} rotina</h3><label>Nome<input id="rnm" value="${esc(r.t)}"></label><label>Repete<select id="rk" onchange="rkc()"><option value="w"${r.k==='w'?' selected':''}>Dias da semana</option><option value="m"${r.k==='m'?' selected':''}>Dia do mês</option></select></label>
+<div id="rw" style="${r.k==='w'?'':'display:none'}"><div class="dw">${DS.map((n,i)=>`<label class="dl"><input type="checkbox" class="rdw" value="${i}"${r.d.includes(i)?' checked':''}>${n}</label>`).join('')}</div></div>
+<div id="rmm" style="${r.k==='m'?'':'display:none'}"><label>Dia do mês<input id="rdm" type="number" min="1" max="31" value="${r.m}"></label></div>
+<label class="ck"><input id="rpv" type="checkbox"${r.priv?' checked':''}> 🔒 Só eu posso ver</label>
+<div class="r2"><button class="b" onclick="rsv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rrm('${r.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`)}
+function rkc(){const w=$('#rk').value==='w';$('#rw').style.display=w?'':'none';$('#rmm').style.display=w?'none':''}
+function rsv(ex){const r=window._r,n=$('#rnm').value.trim();if(!n)return toast('Dê um nome');const k=$('#rk').value,d=[...document.querySelectorAll('.rdw')].filter(x=>x.checked).map(x=>+x.value);if(k==='w'&&!d.length)return toast('Escolha ao menos um dia');
+Object.assign(r,{t:n,k,d,m:Math.min(31,Math.max(1,+$('#rdm').value||1)),priv:$('#rpv').checked});if(!ex)S.rot.push(r);cl();render()}
+function rrm(id){S.rot=S.rot.filter(x=>x.id!==id);cl();render()}
+function render(){save();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.view));$('#me').textContent=S.me==='eu'?'👤 Eu':'👩 Esposa';document.documentElement.style.setProperty('--z',S.z);const b0=$('.bd'),sl=b0?b0.scrollLeft:0;[...SEL].forEach(i=>{if(!T(i))SEL.delete(i)});document.body.classList.toggle('selm',SEL.size>0);$('#app').innerHTML=`<div class="zm"><button onclick="zm(-.1)">🔍 −</button><span>${Math.round(S.z*100)}%</span><button onclick="zm(.1)">🔍 +</button></div>`+({hoje:vh,quadro:vq,agenda:va,depois:vl,rotinas:vr})[S.view]();const b1=$('.bd');if(b1)b1.scrollLeft=sl;sbr()}
+wake();render();tick();setInterval(tick,30000);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
