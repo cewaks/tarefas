@@ -23,6 +23,7 @@ footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1p
 .bar{display:flex;gap:6px;padding:8px 10px}.bar input{margin:0}.bar button{border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:0 12px;font-size:18px;color:var(--tx)}.bar button.on{background:var(--r)}
 nav{display:flex}nav button{flex:1;border:0;background:none;padding:10px 0;font:inherit;font-size:12px;white-space:nowrap;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
 #tt{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 14px;border-radius:20px;opacity:0;transition:.2s;z-index:30;pointer-events:none;font-size:14px;max-width:90%}#tt.on{opacity:1;pointer-events:auto}
+@media(min-width:760px){main{max-width:1500px;margin:0 auto}#app.v-hoje,#app.v-agenda,#app.v-depois,#app.v-rotinas{max-width:720px;margin:0 auto}.col{flex:1 1 0;min-width:calc(240px*var(--z,1));max-width:420px}.bd{align-items:flex-start}footer .bar,footer nav,footer .sbar{max-width:720px;margin:0 auto}.mb{align-items:center;justify-content:center}.md{max-width:560px;border-radius:16px;max-height:86%}.hn{display:none}#tt{top:80px}}
 </style></head><body>
 <header><b>✅ Tarefas</b><span><button id="me" onclick="S.me=S.me==='eu'?'ela':'eu';render()"></button><button onclick="imp()">⤓</button><button onclick="bell()">🔔</button><button onclick="tp()">＋ Modelo</button></span></header>
 <main id="app"></main><div id="m"></div><div id="tt"></div>
@@ -43,7 +44,7 @@ mk({t:'Reunião de pais na escola',due:ad(t,1),tm:'19:00',who:'nos'}),
 mk({t:'Presente de aniversário (surpresa)',st:'ideia',priv:true})]}
 let S;try{S=JSON.parse(localStorage.getItem('tf1'))}catch(e){}
 S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];
-const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave()},
+const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave();schedN()},
 T=id=>S.tasks.find(t=>t.id===id),V=()=>S.tasks.filter(t=>(!t.priv||t.c===S.me)&&!t.lt),
 go=v=>{S.view=v;render()};
 let tmr;function toast(m,a){const e=$('#tt');e.innerHTML=esc(m)+(a?' <u onclick="undo()" style="cursor:pointer;margin-left:10px;font-weight:700">Desfazer</u>':'');e.className='on';clearTimeout(tmr);tmr=setTimeout(()=>e.className='',a?7000:2600)}
@@ -106,8 +107,8 @@ function add(){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me
 let rc;function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Sem voz neste navegador. Use o microfone do teclado.');if(rc){rc.stop();return}
 rc=new R();rc.lang='pt-BR';rc.interimResults=true;rc.onresult=e=>{$('#q').value=[...e.results].map(r=>r[0].transcript).join(' ')};rc.onerror=e=>toast('Microfone indisponível ('+e.error+'). Use o do teclado.');
 rc.onend=()=>{rc=null;$('#mb').classList.remove('on');if($('#q').value.trim())add()};$('#mb').classList.add('on');try{rc.start()}catch(e){rc=null}}
-function bell(){if(!('Notification' in window))return toast('Sem suporte a notificações aqui');Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas':'Permissão negada')).catch(()=>toast('Não foi possível ativar'))}
-function notify(k,m){if(S.nt[k])return;S.nt[k]=1;save();toast(m);try{if(Notification.permission!=='granted')return;const sw=navigator.serviceWorker;if(sw&&sw.controller)sw.ready.then(r=>r.showNotification('Tarefas',{body:m,icon:'icon-192.png',badge:'icon-192.png',tag:k}));else new Notification('Tarefas',{body:m})}catch(e){}}
+function bell(){const LN=isN()&&Capacitor.Plugins.LocalNotifications;if(LN){LN.requestPermissions().then(r=>{toast(r.display==='granted'?'Notificações ativadas':'Permissão negada');schedN()}).catch(()=>toast('Não foi possível ativar'));return}if(!('Notification' in window))return toast('Sem suporte a notificações aqui');Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas':'Permissão negada')).catch(()=>toast('Não foi possível ativar'))}
+function notify(k,m){if(S.nt[k])return;S.nt[k]=1;save();toast(m);if(isN())return;try{if(Notification.permission!=='granted')return;const sw=navigator.serviceWorker;if(sw&&sw.controller)sw.ready.then(r=>r.showNotification('Tarefas',{body:m,icon:'icon-192.png',badge:'icon-192.png',tag:k}));else new Notification('Tarefas',{body:m})}catch(e){}}
 function tick(){wake();const n=new Date(),h=n.getHours()*60+n.getMinutes();V().forEach(t=>{if(t.st==='feito')return;
 if(t.ch&&t.ch<=td()&&h>=540)notify('c'+t.id+t.ch,'Hora de cobrar '+(t.wn||'')+': '+t.t);
 if(t.due===td()&&t.tm){const m=+t.tm.slice(0,2)*60+ +t.tm.slice(3);if(h>=m-10&&h<m+60)notify('e'+t.id+t.tm,'Às '+t.tm+': '+t.t)}})}
@@ -208,7 +209,20 @@ function rkc(){const w=$('#rk').value==='w';$('#rw').style.display=w?'':'none';$
 function rsv(ex){const r=window._r,n=$('#rnm').value.trim();if(!n)return toast('Dê um nome');const k=$('#rk').value,d=[...document.querySelectorAll('.rdw')].filter(x=>x.checked).map(x=>+x.value);if(k==='w'&&!d.length)return toast('Escolha ao menos um dia');
 Object.assign(r,{t:n,k,d,m:Math.min(31,Math.max(1,+$('#rdm').value||1)),priv:$('#rpv').checked});if(!ex)S.rot.push(r);cl();render()}
 function rrm(id){S.rot=S.rot.filter(x=>x.id!==id);cl();render()}
-function render(){save();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.view));$('#me').textContent=window.meLabel?window.meLabel():(S.me==='eu'?'👤 Eu':'👩 Esposa');document.documentElement.style.setProperty('--z',S.z);const b0=$('.bd'),sl=b0?b0.scrollLeft:0;[...SEL].forEach(i=>{if(!T(i))SEL.delete(i)});document.body.classList.toggle('selm',SEL.size>0);$('#app').innerHTML=`<div class="zm"><button onclick="zm(-.1)">🔍 −</button><span>${Math.round(S.z*100)}%</span><button onclick="zm(.1)">🔍 +</button></div>`+({hoje:vh,quadro:vq,agenda:va,depois:vl,rotinas:vr})[S.view]();const b1=$('.bd');if(b1)b1.scrollLeft=sl;sbr()}
+function isN(){return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform())}
+var nsT;
+function schedN(){if(!isN())return;const LN=Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return;clearTimeout(nsT);
+nsT=setTimeout(async()=>{try{let p=await LN.checkPermissions();if(p.display==='prompt'||p.display==='prompt-with-rationale')p=await LN.requestPermissions();if(p.display!=='granted')return;
+const pd=await LN.getPending();if(pd.notifications.length)await LN.cancel({notifications:pd.notifications});
+const L=[],n=Date.now(),at=(d,h,m)=>{const x=new Date(d+'T12:00');x.setHours(h,m,0,0);return x},add=(w,ti,b)=>{if(w.getTime()>n+5000)L.push({title:ti,body:b||'',schedule:{at:w,allowWhileIdle:true}})};
+S.tasks.filter(t=>t.st!=='feito'&&(!t.priv||t.c===S.me)).forEach(t=>{
+if(t.lt&&t.due){add(at(wd(t),9,0),'Voltou do Mais tarde',t.t);return}
+if(t.ch)add(at(t.ch,9,0),'Hora de cobrar '+(t.wn||''),t.t);
+if(t.due&&t.tm){const q=t.tm.split(':'),w=at(t.due,+q[0],+q[1]);w.setMinutes(w.getMinutes()-10);add(w,'Em 10 minutos',t.t)}});
+for(let i=0;i<14;i++){const d=ad(td(),i),R=RV().filter(r=>sch(r,d));if(R.length)add(at(d,8,0),'Rotinas de hoje',R.map(r=>r.t).join(', '))}
+L.sort((a,b)=>a.schedule.at-b.schedule.at);
+await LN.schedule({notifications:L.slice(0,150).map((x,i)=>({...x,id:i+1}))})}catch(e){}},1500)}
+function render(){save();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.view));$('#me').textContent=window.meLabel?window.meLabel():(S.me==='eu'?'👤 Eu':'👩 Esposa');document.documentElement.style.setProperty('--z',S.z);const b0=$('.bd'),sl=b0?b0.scrollLeft:0;[...SEL].forEach(i=>{if(!T(i))SEL.delete(i)});document.body.classList.toggle('selm',SEL.size>0);$('#app').className='v-'+S.view;$('#app').innerHTML=`<div class="zm"><button onclick="zm(-.1)">🔍 −</button><span>${Math.round(S.z*100)}%</span><button onclick="zm(.1)">🔍 +</button></div>`+({hoje:vh,quadro:vq,agenda:va,depois:vl,rotinas:vr})[S.view]();const b1=$('.bd');if(b1)b1.scrollLeft=sl;sbr()}
 wake();render();tick();setInterval(tick,30000);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script><script src="sync.js"></script></body></html>
