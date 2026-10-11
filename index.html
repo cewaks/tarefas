@@ -23,11 +23,12 @@ footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1p
 .bar{display:flex;gap:6px;padding:8px 10px}.bar input{margin:0}.bar button{border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:0 12px;font-size:18px;color:var(--tx)}.bar button.on{background:var(--r)}
 nav{display:flex}nav button{flex:1;border:0;background:none;padding:10px 0;font:inherit;font-size:12px;white-space:nowrap;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
 #tt{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 14px;border-radius:20px;opacity:0;transition:.2s;z-index:30;pointer-events:none;font-size:14px;max-width:90%}#tt.on{opacity:1;pointer-events:auto}
+details.mo{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:10px 0}details.mo summary{cursor:pointer;color:var(--mu)}.pills{display:flex;gap:6px;margin-bottom:6px}.pills .col.mini{margin:0}.bar .qb{font-size:13px;padding:0 10px;white-space:nowrap}
 @media(min-width:760px){main{max-width:1500px;margin:0 auto}#app.v-hoje,#app.v-agenda,#app.v-depois,#app.v-rotinas{max-width:720px;margin:0 auto}.col{flex:1 1 0;min-width:calc(240px*var(--z,1));max-width:420px}.bd{align-items:flex-start}footer .bar,footer nav,footer .sbar{max-width:720px;margin:0 auto}.mb{align-items:center;justify-content:center}.md{max-width:560px;border-radius:16px;max-height:86%}.hn{display:none}#tt{top:80px}}
 </style></head><body>
 <header><b>✅ Tarefas</b><span><button id="me" onclick="S.me=S.me==='eu'?'ela':'eu';render()"></button><button onclick="imp()">⤓</button><button onclick="bell()">🔔</button><button onclick="tp()">＋ Modelo</button></span></header>
 <main id="app"></main><div id="m"></div><div id="tt"></div>
-<footer><div id="sb" class="sbar" style="display:none"></div><div class="bar"><input id="q" placeholder="Anotar rápido ou falar…" onkeydown="if(event.key==='Enter')add()"><button id="mb" onclick="mic()">🎤</button><button onclick="add()">＋</button></div>
+<footer><div id="sb" class="sbar" style="display:none"></div><div class="bar"><input id="q" placeholder="Anotar rápido…" onkeydown="if(event.key==='Enter')add('ideia')"><button class="qb" onclick="add('ideia')">💡 Ideia</button><button class="qb" onclick="add('fazer')">📋 A fazer</button></div>
 <nav><button data-v="hoje" onclick="go('hoje')">🎯 Hoje</button><button data-v="quadro" onclick="go('quadro')">🗂 Quadro</button><button data-v="agenda" onclick="go('agenda')">📅 Agenda</button><button data-v="depois" onclick="go('depois')">⏳ Mais tarde</button><button data-v="rotinas" onclick="go('rotinas')">🔁 Rotinas</button></nav></footer>
 <script>
 const $=s=>document.querySelector(s),ymd=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
@@ -36,15 +37,15 @@ dd=(a,b)=>Math.round((new Date(a+'T12:00')-new Date(b+'T12:00'))/864e5),
 esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 uid=()=>Math.random().toString(36).slice(2,9);
 const ST=[['ideia','Ideia'],['fazer','A fazer'],['fazendo','Fazendo'],['aguardando','Aguardando'],['feito','Feito']],WHO={eu:'Eu',ela:'Esposa',nos:'Nós'};
-function mk(o){return Object.assign({id:uid(),t:'',st:'fazer',pri:1,due:'',tm:'',who:'eu',priv:false,c:'eu',next:'',wn:'',ph:'',ch:'',subs:[],nt:'',log:[],min:0,foc:false,rec:'',per:0,ant:14,lt:false,up:td()},o)}
+function mk(o){return Object.assign({id:uid(),t:'',st:'fazer',pri:1,due:'',tm:'',who:'eu',priv:false,c:'eu',next:'',wn:'',ph:'',ch:'',subs:[],nt:'',log:[],min:0,foc:false,rec:'',per:0,ant:14,lt:false,rm:[],up:td()},o)}
 function seed(){const t=td();return[
 mk({t:'Consertar vazamento da pia',st:'aguardando',next:'Ligar para o João e cobrar a visita',wn:'João (encanador)',ph:'11999990000',ch:t,due:ad(t,3),up:ad(t,-6),pri:2}),
 mk({t:'Renovar seguro do carro',next:'Pedir 3 cotações',due:t,foc:true,min:5,subs:[{t:'Cotação 1',d:1},{t:'Cotação 2',d:0}]}),
 mk({t:'Reunião de pais na escola',due:ad(t,1),tm:'19:00',who:'nos'}),
 mk({t:'Presente de aniversário (surpresa)',st:'ideia',priv:true})]}
 let S;try{S=JSON.parse(localStorage.getItem('tf1'))}catch(e){}
-S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];
-const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave();schedN()},
+S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];if(S.hf===undefined)S.hf=1;S.ns=Object.assign({sum:1,fd:1,rev:1,hs:'08:00',hf:'21:00',hr:'18:00'},S.ns||{});
+const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave();schedN();pushW()},
 T=id=>S.tasks.find(t=>t.id===id),V=()=>S.tasks.filter(t=>(!t.priv||t.c===S.me)&&!t.lt),
 go=v=>{S.view=v;render()};
 let tmr;function toast(m,a){const e=$('#tt');e.innerHTML=esc(m)+(a?' <u onclick="undo()" style="cursor:pointer;margin-left:10px;font-weight:700">Desfazer</u>':'');e.className='on';clearTimeout(tmr);tmr=setTimeout(()=>e.className='',a?7000:2600)}
@@ -62,11 +63,27 @@ function pick(t,o){P=o;modal(`<h3>${t}</h3>`+o.map((x,i)=>`<button class="b g" o
 function lg(t,m){t.log.push({d:td(),m});t.up=td()}
 function gc(t){const a=t.due.replace(/-/g,'');let d;if(t.tm){const h=+t.tm.slice(0,2);d=a+'T'+t.tm.replace(':','')+'00/'+a+'T'+String(Math.min(h+1,23)).padStart(2,'0')+t.tm.slice(3)+'00'}else d=a+'/'+ad(t.due,1).replace(/-/g,'');return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t.t)+'&dates='+d+'&details='+encodeURIComponent(t.next||t.nt)}
 function card(t,b){const dn=t.st==='feito',age=dd(td(),t.up),ac=age>=7?'cr':age>=3?'cy':'cg',sd=t.subs.filter(s=>s.d).length,w=t.st==='aguardando',dg=(t.ph||'').replace(/\D/g,''),wa=dg.length<=11?'55'+dg:dg;
-return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${t.foc?'⭐ ':''}${esc(t.t)}</div><div class="ch">${t.due?`<span class="c${t.due<td()&&!dn?' cr':''}">📅 ${t.due.slice(8)}/${t.due.slice(5,7)}${t.tm?' '+t.tm:''}</span>`:''}<span class="c">${t.who==='nos'?'👫':t.who==='ela'?'👩':'👤'} ${WHO[t.who]}</span>${t.priv?'<span class="c">🔒</span>':''}${t.min?`<span class="c">⏱ ${t.min}min</span>`:''}${!dn&&age>0?`<span class="c ${ac}">${age}d parada</span>`:''}</div>`
+return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${t.foc?'⭐ ':''}${esc(t.t)}</div><div class="ch">${t.due?`<span class="c${t.due<td()&&!dn?' cr':''}">📅 ${t.due.slice(8)}/${t.due.slice(5,7)}${t.tm?' '+t.tm:''}</span>`:''}<span class="c">${t.who==='nos'?'👫':t.who==='ela'?'👩':'👤'} ${WHO[t.who]}</span>${t.priv?'<span class="c">🔒</span>':''}${t.min?`<span class="c">⏱ ${t.min}min</span>`:''}${nrb(t)}${!dn&&age>0?`<span class="c ${ac}">${age}d parada</span>`:''}</div>`
 +(dn?'':t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')
 +(w?`<div class="wt">⏳ ${esc(t.wn||'alguém')}${t.ch?' · cobrar '+t.ch.slice(8)+'/'+t.ch.slice(5,7):''}<div class="r3">${dg?`<a class="b g" href="tel:${dg}">📞 Ligar</a><a class="b g" target="_blank" href="https://wa.me/${wa}">💬 Zap</a>`:''}<button class="b" onclick="cb('${t.id}')">Cobrei</button></div></div>`:'')
 +(t.subs.length?`<div class="pg"><i style="width:${sd/t.subs.length*100}%"></i></div>`+t.subs.map((s,i)=>`<label class="ck"><input type="checkbox"${s.d?' checked':''} onchange="sub('${t.id}',${i})"> ${esc(s.t)}</label>`).join(''):'')
 +(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="fc('${t.id}')">⭐</button><button onclick="sn('${t.id}')">💤</button><button onclick="hp('${t.id}')">🤝</button>${t.due?`<a href="${gc(t)}" target="_blank">🗓</a>`:''}<button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
+function nrb(t){const n=new Date(),s=ymd(n)+'T'+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),r=(t.rm||[]).filter(q=>q>=s)[0];return r?`<span class="c">🔔 ${(r.slice(0,10)===td()?'':fm(r.slice(0,10))+' ')+r.slice(11,16)}</span>`:''}
+function revb(L){const x=td(),n=L.filter(t=>t.due&&dd(x,t.due)>=7).length;return`<button class="b g" onclick="rev()">🗓 Revisão semanal${n?' · ⚠️ '+n+' atrasada'+(n>1?'s':'')+' há 7+ dias':''}</button>`}
+function rev(){const x=td(),L=V().filter(t=>t.st!=='feito'),od=L.filter(t=>t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)),
+stall=L.filter(t=>!od.includes(t)&&t.st!=='ideia'&&dd(x,t.up)>=7&&!(t.due&&t.due>x)),
+dn=S.tasks.reduce((n,t)=>n+t.log.filter(l=>l.m==='Concluída'&&dd(x,l.d)<7).length,0),rn=S.rot.reduce((n,r)=>n+r.log.filter(d=>dd(x,d)<7).length,0),sk=S.sk.l===x||S.sk.l===ad(x,-1)?S.sk.n:0,
+row=(t,i)=>`<label class="ck"><input type="checkbox" class="rvk" value="${t.id}"> <span>${esc(t.t)} <span class="mu">· ${i}</span></span></label>`;
+modal(`<h3>🗓 Revisão semanal</h3><p class="mu">✅ ${dn} tarefa${dn===1?'':'s'} e 🔁 ${rn} rotina${rn===1?'':'s'} feitas em 7 dias · 🔥 ${sk} dia(s) seguidos</p>
+${od.length?'<h4>⚠️ Atrasadas</h4>'+od.map(t=>row(t,'venceu '+fm(t.due))).join(''):''}${stall.length?'<h4>🧊 Paradas há 7+ dias</h4>'+stall.map(t=>row(t,dd(x,t.up)+' dias parada')).join(''):''}
+${od.length+stall.length?'':'<p>Tudo em dia 🎉</p>'}
+${od.length+stall.length?`<button class="b g" onclick="document.querySelectorAll('.rvk').forEach(e=>e.checked=true)">Marcar todas</button><p class="mu">Marque e escolha o que fazer com elas:</p>
+<div class="r2"><button class="b" onclick="rvo('tmrw')">☀️ Amanhã</button><button class="b" onclick="rvo('sun')">🗓 Domingo</button><button class="b" onclick="rvo('date')">📅 Data…</button><button class="b" onclick="rvo('lt')">⏳ Mais tarde</button><button class="b" onclick="rvo('done')">✓ Concluir</button><button class="b d" onclick="rvo('del')">🗑 Excluir</button></div>`:''}`)}
+function rvo(op){const ids=[...document.querySelectorAll('.rvk')].filter(e=>e.checked).map(e=>e.value);if(!ids.length)return toast('Marque pelo menos uma');
+if(op==='tmrw')post(ids,ad(td(),1));else if(op==='sun')post(ids,ad(td(),(7-new Date().getDay())%7||7));else if(op==='date')pdate(ids);
+else if(op==='lt'){ids.forEach(id=>{const t=T(id);t.lt=true;t.foc=false;if(!t.due||t.due<ad(td(),20))t.due=ad(td(),30);lg(t,'Enviada para Mais tarde')});cl();render();toast(ids.length+' enviada'+(ids.length>1?'s':'')+' para Mais tarde')}
+else if(op==='done'){ids.forEach(id=>{const t=T(id);if(t&&t.st!=='feito')fin(id)});cl()}
+else if(op==='del'){U={bulk:S.tasks.filter(t=>ids.includes(t.id))};S.tasks=S.tasks.filter(t=>!ids.includes(t.id));SEL.clear();cl();render();toast(ids.length+' excluída'+(ids.length>1?'s':''),1)}}
 function sub(id,i){const t=T(id);t.subs[i].d^=1;t.up=td();render()}
 function fc(id){const t=T(id);t.foc=!t.foc;render()}
 function mv(id,d){const t=T(id),i=ST.findIndex(s=>s[0]===t.st)+d;if(i<0||i>4)return;t.st=ST[i][0];lg(t,'→ '+ST[i][1]);render()}
@@ -75,55 +92,80 @@ function undo(){if(!U)return;if(U.bulk){S.tasks.push(...U.bulk);U=null;toast('De
 function fin(id){const t=T(id);if(t.st==='feito'){t.st='fazer';lg(t,'Reaberta')}else{U={id,s:JSON.stringify(t),sk:{...S.sk},nid:null};t.st='feito';t.foc=false;lg(t,'Concluída');
 if(S.sk.l!==td()){S.sk.n=S.sk.l===ad(td(),-1)?S.sk.n+1:1;S.sk.l=td()}
 if(t.per){const n=mk({...t,id:uid(),st:'fazer',lt:true,log:[],subs:t.subs.map(s=>({t:s.t,d:0})),due:addm(td(),t.per),up:td(),foc:false});S.tasks.push(n);U.nid=n.id}toast('Feito! 🎉'+(U.nid?' Volta no Mais tarde.':''),1)}render()}
-function sn(id){const t=T(id),s=(d,tm)=>()=>{t.due=d;if(tm)t.tm=tm;lg(t,'Adiada para '+d);cl();render()},sat=ad(td(),(6-new Date().getDay()+7)%7||7);
-pick('Adiar para…',[['🌙 Hoje à noite',s(td(),'20:00')],['☀️ Amanhã',s(ad(td(),1))],['🏖 Fim de semana',s(sat)]])}
+function sn(id){snm([id])}
+function snm(ids,ti){const w=new Date().getDay(),sun=ad(td(),(7-w)%7||7),sat=ad(td(),(6-w+7)%7||7);
+pick(ti||'Adiar para…',[['🌙 Hoje à noite',()=>post(ids,td(),'20:00')],['☀️ Amanhã',()=>post(ids,ad(td(),1))],['🏖 Sábado',()=>post(ids,sat)],['🗓 Semana que vem (domingo)',()=>post(ids,sun)],['📅 Escolher data…',()=>pdate(ids)]])}
+function pdate(ids){window._pid=ids;modal(`<h3>📅 Escolher data</h3><input id="pdt" type="date" value="${ad(td(),1)}"><button class="b" onclick="post(window._pid,$('#pdt').value||td())">Adiar</button>`)}
+function post(ids,d,tm){ids.forEach(id=>{const t=T(id);if(!t)return;t.due=d;if(tm)t.tm=tm;t.rm=[...new Set((t.rm||[]).map(r=>r.slice(0,10)<d?d+r.slice(10):r))].sort();if(t.ch&&t.ch<d)t.ch=d;lg(t,'Adiada para '+d)});SEL.clear();cl();render();toast(ids.length+' adiada'+(ids.length>1?'s':'')+' para '+fm(d))}
 function cb(id){const t=T(id),s=n=>()=>{t.ch=ad(td(),n);lg(t,'Cobrou '+t.wn+'. Nova cobrança: '+t.ch);cl();render()};pick('Cobrei! Cobrar de novo em…',[['Amanhã',s(1)],['3 dias',s(3)],['1 semana',s(7)]])}
 function hp(id){const o=S.me==='eu'?'ela':'eu';modal(`<h3>🤝 Pedir ajuda a ${WHO[o]}</h3><label>Comentário<textarea id="hc"></textarea></label><button class="b" onclick="hg('${id}','${o}')">Enviar</button>`)}
 function hg(id,o){const t=T(id);t.who=o;t.priv=false;lg(t,'Pedido a '+WHO[o]+': '+$('#hc').value);cl();render()}
 function fd(){const L=V().filter(t=>t.st!=='feito'&&t.st!=='aguardando');modal(`<h3>🌙 Fechar o dia</h3><p class="mu">Escolha as tarefas de foco para amanhã.</p><div class="pl">${L.map(t=>`<label class="ck"><input type="checkbox" value="${t.id}"${t.foc?' checked':''}> ${esc(t.t)}</label>`).join('')||'Nada pendente 🎉'}</div><button class="b" onclick="fg()">Pronto</button>`)}
 function fg(){const c=[...document.querySelectorAll('.pl input')].filter(x=>x.checked).map(x=>x.value);V().forEach(t=>{if(c.includes(t.id)){t.foc=true;if(!t.due||t.due<=td())t.due=ad(td(),1)}else if(t.st!=='aguardando')t.foc=false});cl();render()}
 function tp(){pick('Modelo',[['🔧 Contratar prestador',()=>{cl();edit(null,{t:'Contratar ',subs:['Pedir orçamentos','Comparar','Agendar','Pagar','Avaliar'].map(x=>({t:x,d:0}))})}],['💳 Conta do mês',()=>{cl();edit(null,{t:'Pagar ',rec:'m',due:td(),subs:[{t:'Conferir valor',d:0},{t:'Pagar',d:0}]})}],['Em branco',()=>{cl();edit()}]])}
-function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;
+function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;window._rm=(t.rm||[]).slice();
 const o=(a,v)=>a.map(([k,l])=>`<option value="${k}"${k==v?' selected':''}>${l}</option>`).join(''),i=(k,l,ty)=>`<label>${l}<input id="f${k}" type="${ty||'text'}" value="${esc(t[k]||'')}"></label>`;
-modal(`<h3>${id?'Editar':'Nova'} tarefa</h3>${i('t','Título')}${i('next','Próxima ação (passo físico, ex.: ligar para…)')}
-<div class="r2"><label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde']]),t.lt?'depois':t.st)}</select></label><label>Prioridade<select id="fpri">${o([[0,'Pode esperar'],[1,'Importante'],[2,'Urgente']],t.pri)}</select></label></div>
-<div class="r2"><label>Responsável<select id="fwho">${o(Object.entries(WHO),t.who)}</select></label><label>Ao concluir, voltar em<select id="fper">${o([[0,'Não repetir'],[1,'1 mês'],[3,'3 meses'],[6,'6 meses'],[12,'1 ano'],[24,'2 anos']],t.per||0)}</select></label></div>
-<label class="ck"><input id="fpv" type="checkbox"${t.priv?' checked':''}> 🔒 Só eu posso ver</label>
-<div class="r2">${i('due','Data','date')}${i('tm','Hora','time')}</div><div class="r2"><label>Outro prazo (meses)<input id="fper2" type="number" min="1" value="${t.per&&![1,3,6,12,24].includes(t.per)?t.per:''}"></label>${i('ant','Voltar quantos dias antes?','number')}</div>${i('min','Minutos estimados','number')}
-<div class="r2">${i('wn','Aguardando quem?')}${i('ph','Telefone','tel')}</div>${i('ch','Cobrar em','date')}
+modal(`<h3>${id?'Editar':'Nova'} tarefa</h3>${i('t','Título')}
+<label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde']]),t.lt?'depois':t.st)}</select></label>
+<div class="r2">${i('due','Data','date')}${i('tm','Hora','time')}</div>
+<label>Lembretes (avisa nestes dias e horas)</label><div class="r2"><input id="frmi" type="datetime-local" value="${t.due||td()}T09:00"><button class="b g" onclick="radd()">＋ Adicionar</button></div><div id="rml" class="ch"></div>
 <label>Subtarefas (uma por linha)<textarea id="fsb">${esc(t.subs.map(s=>s.t).join('\n'))}</textarea></label>
 <label>Anotações<textarea id="fnt">${esc(t.nt)}</textarea></label>
+<details class="mo"><summary>⚙️ Mais opções</summary>
+${i('next','Próxima ação (passo físico, ex.: ligar para…)')}
+<div class="r2"><label>Prioridade<select id="fpri">${o([[0,'Pode esperar'],[1,'Importante'],[2,'Urgente']],t.pri)}</select></label><label>Responsável<select id="fwho">${o(Object.entries(WHO),t.who)}</select></label></div>
+<label class="ck"><input id="fpv" type="checkbox"${t.priv?' checked':''}> 🔒 Só eu posso ver</label>
+<div class="r2">${i('wn','Aguardando quem?')}${i('ph','Telefone','tel')}</div>${i('ch','Cobrar em','date')}
+<div class="r2"><label>Ao concluir, voltar em<select id="fper">${o([[0,'Não repetir'],[1,'1 mês'],[3,'3 meses'],[6,'6 meses'],[12,'1 ano'],[24,'2 anos']],t.per||0)}</select></label><label>Ou outro prazo (meses)<input id="fper2" type="number" min="1" value="${t.per&&![1,3,6,12,24].includes(t.per)?t.per:''}"></label></div>
+${i('ant','Mais tarde: voltar quantos dias antes?','number')}${i('min','Minutos estimados (modo 5 min)','number')}
+</details>
 ${t.log.length?`<div class="lg">${t.log.slice(-4).map(l=>l.d+': '+esc(l.m)).join('<br>')}</div>`:''}
-<div class="r2"><button class="b" onclick="sv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rm('${t.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`)}
+<div class="r2"><button class="b" onclick="sv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rm('${t.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`);rr()}
+const rfm=x=>x.slice(8,10)+'/'+x.slice(5,7)+' '+x.slice(11,16);
+function rr(){$('#rml').innerHTML=window._rm.map((x,i)=>`<span class="c">🔔 ${rfm(x)} <b onclick="rdl(${i})" style="cursor:pointer;margin-left:6px">✕</b></span>`).join('')}
+function radd(){const v=$('#frmi').value;if(!v)return toast('Escolha o dia e a hora');if(!window._rm.includes(v))window._rm.push(v);window._rm.sort();rr()}
+function rdl(i){window._rm.splice(i,1);rr()}
 function sv(ex){const t=window._t,g=k=>$('#f'+k).value;if(!g('t').trim())return toast('Dê um título');if(g('st')==='depois'&&!g('due'))return toast('Mais tarde precisa de uma data');
-Object.assign(t,{t:g('t').trim(),next:g('next'),st:g('st')==='depois'?'fazer':g('st'),lt:g('st')==='depois',per:+g('per2')||+g('per')||0,ant:g('ant')===''?14:+g('ant'),pri:+g('pri'),who:g('who'),priv:$('#fpv').checked,due:g('due'),tm:g('tm'),min:+g('min')||0,wn:g('wn'),ph:g('ph'),ch:g('ch'),nt:g('nt')});
+Object.assign(t,{t:g('t').trim(),next:g('next'),st:g('st')==='depois'?'fazer':g('st'),lt:g('st')==='depois',per:+g('per2')||+g('per')||0,ant:g('ant')===''?14:+g('ant'),pri:+g('pri'),who:g('who'),priv:$('#fpv').checked,due:g('due'),tm:g('tm'),min:+g('min')||0,wn:g('wn'),ph:g('ph'),ch:g('ch'),nt:g('nt'),rm:window._rm.slice()});if(!t.due&&t.rm.length)t.due=t.rm[0].slice(0,10);
 const old=t.subs;t.subs=g('sb').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,d:(old.find(s=>s.t===x)||{}).d||0}));
 t.up=td();if(!ex)S.tasks.push(t);cl();render()}
 function rm(id){SEL.delete(id);S.tasks=S.tasks.filter(t=>t.id!==id);cl();render()}
 function sm(x){x=x.trim().replace(/\s+/g,' ');const l=x.toLowerCase();let d='';if(/amanh[ãa]/.test(l))d=ad(td(),1);else if(/\bhoje\b/.test(l))d=td();
 let t=x,n='';if(x.length>70){t=x.split(/[.!?;]/)[0]||x;if(t.length>60)t=t.slice(0,60).replace(/\s\S*$/,'')+'…';n=x}
 return{t:t[0].toUpperCase()+t.slice(1),nt:n,due:d,st:d?'fazer':'ideia'}}
-function add(){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me,...sm(v)}));$('#q').value='';toast('Tarefa criada');render()}
-let rc;function mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Sem voz neste navegador. Use o microfone do teclado.');if(rc){rc.stop();return}
-rc=new R();rc.lang='pt-BR';rc.interimResults=true;rc.onresult=e=>{$('#q').value=[...e.results].map(r=>r[0].transcript).join(' ')};rc.onerror=e=>toast('Microfone indisponível ('+e.error+'). Use o do teclado.');
-rc.onend=()=>{rc=null;$('#mb').classList.remove('on');if($('#q').value.trim())add()};$('#mb').classList.add('on');try{rc.start()}catch(e){rc=null}}
-function bell(){const LN=isN()&&Capacitor.Plugins.LocalNotifications;if(LN){LN.requestPermissions().then(r=>{toast(r.display==='granted'?'Notificações ativadas':'Permissão negada');schedN()}).catch(()=>toast('Não foi possível ativar'));return}if(!('Notification' in window))return toast('Sem suporte a notificações aqui');Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas':'Permissão negada')).catch(()=>toast('Não foi possível ativar'))}
+function add(st){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me,...sm(v),st}));$('#q').value='';toast(st==='ideia'?'Guardada em Ideias':'Criada em A fazer');render()}
+function bellm(){const c=(k,l,h)=>`<label class="ck"><input id="n${k}" type="checkbox"${S.ns[k]?' checked':''}> <span style="flex:1">${l}</span><input id="n${h}" type="time" value="${S.ns[h]}" style="width:auto;margin:0"></label>`;
+modal(`<h3>🔔 Avisos</h3><p class="mu">Além dos lembretes de cada tarefa, o app pode avisar:</p>${c('sum','☀️ Resumo da manhã','hs')}${c('fd','🌙 Fechar o dia','hf')}${c('rev','🗓 Revisão semanal (domingo)','hr')}
+<button class="b" onclick="nsv()">Salvar</button><button class="b g" onclick="ntest()">Enviar teste agora</button>`)}
+function nsv(){const g=k=>$('#n'+k);['sum','fd','rev'].forEach(k=>S.ns[k]=g(k).checked?1:0);['hs','hf','hr'].forEach(k=>S.ns[k]=g(k).value||S.ns[k]);cl();save();toast('Avisos salvos')}
+function ntest(){const LN=Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return toast('Plugin de notificações indisponível neste app');
+LN.requestPermissions().then(async r=>{if(r.display!=='granted')return toast('Permissão negada. Libere em Configurações > Apps > Tarefas > Notificações');
+try{await LN.schedule({notifications:[{id:999999,title:'Teste de notificação',body:'Se você viu isto, está funcionando ✅',schedule:{at:new Date(Date.now()+8000),allowWhileIdle:true}}]});toast('Teste em 8 segundos. Bloqueie a tela ou feche o app.')}catch(e){toast('Erro ao agendar: '+(e&&e.message||e))}schedN()}).catch(e=>toast('Erro: '+(e&&e.message||e)))}
+function bell(){if(isN())return bellm();
+if(!('Notification' in window))return toast('Sem suporte a notificações aqui');Notification.requestPermission().then(p=>toast(p==='granted'?'Notificações ativadas':'Permissão negada')).catch(()=>toast('Não foi possível ativar'))}
 function notify(k,m){if(S.nt[k])return;S.nt[k]=1;save();toast(m);if(isN())return;try{if(Notification.permission!=='granted')return;const sw=navigator.serviceWorker;if(sw&&sw.controller)sw.ready.then(r=>r.showNotification('Tarefas',{body:m,icon:'icon-192.png',badge:'icon-192.png',tag:k}));else new Notification('Tarefas',{body:m})}catch(e){}}
 function tick(){wake();const n=new Date(),h=n.getHours()*60+n.getMinutes();V().forEach(t=>{if(t.st==='feito')return;
 if(t.ch&&t.ch<=td()&&h>=540)notify('c'+t.id+t.ch,'Hora de cobrar '+(t.wn||'')+': '+t.t);
 if(t.due===td()&&t.tm){const m=+t.tm.slice(0,2)*60+ +t.tm.slice(3);if(h>=m-10&&h<m+60)notify('e'+t.id+t.tm,'Às '+t.tm+': '+t.t)}})}
 function vh(){const x=td();let L=V().filter(t=>t.st!=='feito');const sec=(h,a,e)=>a.length?`<h4>${h}</h4>`+a.map(y=>card(y)).join(''):e?`<h4>${h}</h4><p class="mu">${e}</p>`:'';
 const sk=S.sk.l===x||S.sk.l===ad(x,-1)?S.sk.n:0;
-let b=`<div class="hd"><b>${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</b><div class="mu">🔥 ${sk} dia(s) seguidos concluindo tarefas</div></div><div class="r2"><button class="b ${S.five?'':'g'}" onclick="S.five=!S.five;render()">⚡ Modo 5 min</button><button class="b g" onclick="fd()">🌙 Fechar o dia</button></div>`+rstrip();
+let b=`<div class="hd"><b>${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</b><div class="mu">🔥 ${sk} dia(s) seguidos concluindo tarefas</div></div><div class="r2"><button class="b ${S.five?'':'g'}" onclick="S.five=!S.five;render()">⚡ Modo 5 min</button><button class="b g" onclick="fd()">🌙 Fechar o dia</button></div>`+revb(L)+rstrip();
 if(S.five)return b+sec('Tarefas de até 5 minutos',L.filter(t=>t.min&&t.min<=5),'Nenhuma tarefa de 5 min ou menos. Preencha "minutos estimados".');
 const c=L.filter(t=>t.st==='aguardando'&&t.ch&&t.ch<=x),f=L.filter(t=>!c.includes(t)&&(t.foc||(t.due&&t.due<=x&&t.st!=='aguardando'))).sort((a,b)=>b.pri-a.pri),p=L.filter(t=>!c.includes(t)&&!f.includes(t)&&dd(x,t.up)>=5);
 return b+sec('📞 Cobrar hoje',c)+sec('🎯 Foco de hoje',f,'Nada em foco. Use ⭐ numa tarefa ou "Fechar o dia".')+sec('🧊 Paradas há 5+ dias',p)}
-function vq(){const n=V().filter(t=>t.st==='ideia').length;return(S.hi?`<div class="col mini" data-st="ideia" onclick="S.hi=0;render()">💡 ${n}</div>`:'')+'<div class="bd">'+ST.map(([k,l])=>{const a=V().filter(t=>t.st===k);
-if(k==='ideia'&&S.hi)return'';
-return`<div class="col" data-st="${k}"><h4>${l} <span class="mu">${a.length}</span>${k==='ideia'?' <button class="hb" onclick="S.hi=1;render()">🙈 Esconder</button>':''}</h4>${a.map(x=>card(x,1)).join('')}</div>`}).join('')+'</div>'}
-function va(){const s=ad(td(),S.wk*7);let h=`<div class="r2"><button class="b g" onclick="S.wk--;render()">◀ Semana</button><button class="b g" onclick="S.wk++;render()">Semana ▶</button></div>`;
-for(let i=0;i<7;i++){const d=ad(s,i),a=V().filter(t=>t.due===d&&t.st!=='feito').sort((x,y)=>(x.tm||'').localeCompare(y.tm||''));
-h+=`<h4>${new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'})}${d===td()?' · hoje':''}</h4>`+(a.length?a.map(x=>`<div class="ev"><b>${x.tm||'dia todo'}</b>${card(x)}</div>`).join(''):'<p class="mu">—</p>')}return h}
+function vq(){const H={ideia:'hi',feito:'hf'},IC={ideia:'💡',feito:'✅'},cnt=k=>V().filter(t=>t.st===k).length;let p='';
+ST.forEach(([k])=>{if(H[k]&&S[H[k]])p+=`<span class="col mini" data-st="${k}" onclick="S.${H[k]}=0;render()">${IC[k]} ${cnt(k)}</span>`});
+return(p?'<div class="pills">'+p+'</div>':'')+'<div class="bd">'+ST.map(([k,l])=>{if(H[k]&&S[H[k]])return'';const a=V().filter(t=>t.st===k);
+return`<div class="col" data-st="${k}"><h4>${l} <span class="mu">${a.length}</span>${H[k]?` <button class="hb" onclick="S.${H[k]}=1;render()">🙈 Esconder</button>`:''}</h4>${a.map(x=>card(x,1)).join('')}</div>`}).join('')+'</div>'}
+function va(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.due),ev=t=>(t.rm||[]).filter(r=>r.slice(0,10)===t.due).sort()[0]||'',tm=t=>t.tm||ev(t).slice(11,16),
+key=t=>tm(t)||'99:99',row=t=>`<div class="ev"><b>${tm(t)||'dia todo'}</b>${card(t)}</div>`,
+sec=(h,a,byDay)=>a.length?`<h4>${h} <span class="mu">${a.length}</span></h4>`+a.sort((p,q)=>(byDay?p.due.localeCompare(q.due):0)||key(p).localeCompare(key(q))).map(row).join(''):'',
+day=d=>new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'short'});
+let h=sec('⚠️ Atrasadas',L.filter(t=>t.due<x),1);
+h+=sec('Hoje',L.filter(t=>t.due===x))||'<h4>Hoje</h4><p class="mu">Nada marcado para hoje.</p>';
+h+=sec('Amanhã',L.filter(t=>t.due===ad(x,1)));
+for(let i=2;i<=14;i++){const d=ad(x,i);h+=sec(day(d),L.filter(t=>t.due===d))}
+return h+sec('Mais para frente',L.filter(t=>t.due>ad(x,14)),1)}
 function imp(){modal(`<h3>⤓ Importar do Google Tarefas</h3><p class="mu">Cole uma tarefa por linha, ou envie o arquivo Tasks.json exportado pelo Google Takeout.</p><label>Colar lista<textarea id="ip"></textarea></label><button class="b" onclick="ip1()">Importar texto</button><label>Arquivo do Takeout (.zip ou .json)<input type="file" id="if" onchange="toast('Lendo arquivo…');ip2(this.files[0])"></label><h4>Backup</h4><button class="b g" onclick="bk1()">Gerar backup e copiar</button><label>Texto do backup (cole aqui para restaurar)<textarea id="bkt"></textarea></label><button class="b g" onclick="bk2()">Restaurar (substitui tudo)</button>`)}
 function bk1(){const t=$('#bkt');t.value=JSON.stringify(S);t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Backup copiado'),()=>toast('Copie o texto manualmente'))}catch(e){toast('Copie o texto manualmente')}}
 function bk2(){try{const j=JSON.parse($('#bkt').value);if(!Array.isArray(j.tasks))throw 0;S=j;S.z=S.z||1;S.rot=S.rot||[];S.nt=S.nt||{};S.view='hoje';cl();render();toast('Backup restaurado')}catch(e){toast('Texto de backup inválido')}}
@@ -171,7 +213,7 @@ if(e.ctrlKey||e.metaKey||e.shiftKey){tg(id);return}
 if(isI(e.target))return;edit(id)});
 function tg(id){SEL.has(id)?SEL.delete(id):SEL.add(id);nc=Date.now();try{navigator.vibrate(15)}catch(e){}render()}
 function scl(){SEL.clear();render()}
-function sbr(){const n=SEL.size,b=$('#sb');b.style.display=n?'flex':'none';$('.bar').style.display=n?'none':'';if(n)b.innerHTML=`<span>${n} selecionada${n>1?'s':''}</span><button class="b" onclick="rv()">🔍 Revisar e excluir</button><button class="b g" onclick="scl()">Cancelar</button>`}
+function sbr(){const n=SEL.size,b=$('#sb');b.style.display=n?'flex':'none';$('.bar').style.display=n?'none':'';if(n)b.innerHTML=`<span>${n} selecionada${n>1?'s':''}</span><button class="b" onclick="rv()">🔍 Revisar e excluir</button><button class="b g" onclick="snm([...SEL],'Adiar '+SEL.size+' tarefa(s)')">💤 Adiar</button><button class="b g" onclick="scl()">Cancelar</button>`}
 function det(t){const r=(l,v)=>v?`<div><span class="mu">${l}</span> ${esc(v)}</div>`:'',fd=x=>x?x.split('-').reverse().join('/'):'';
 return r('Próxima ação:',t.next)+r('Prazo:',t.due?fd(t.due)+(t.tm?' '+t.tm:''):'')+r('Responsável:',WHO[t.who]+(t.priv?' · 🔒 privada':''))+r('Aguardando:',t.wn?t.wn+(t.ph?' ('+t.ph+')':''):'')+r('Cobrar em:',fd(t.ch))
 +(t.subs.length?'<div class="mu">Subtarefas</div>'+t.subs.map(q=>`<div>${q.d?'☑':'☐'} ${esc(q.t)}</div>`).join(''):'')
@@ -213,16 +255,49 @@ function isN(){return!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.
 var nsT;
 function schedN(){if(!isN())return;const LN=Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return;clearTimeout(nsT);
 nsT=setTimeout(async()=>{try{let p=await LN.checkPermissions();if(p.display==='prompt'||p.display==='prompt-with-rationale')p=await LN.requestPermissions();if(p.display!=='granted')return;
-const pd=await LN.getPending();if(pd.notifications.length)await LN.cancel({notifications:pd.notifications});
-const L=[],n=Date.now(),at=(d,h,m)=>{const x=new Date(d+'T12:00');x.setHours(h,m,0,0);return x},add=(w,ti,b)=>{if(w.getTime()>n+5000)L.push({title:ti,body:b||'',schedule:{at:w,allowWhileIdle:true}})};
+await LN.registerActionTypes({types:[{id:'TAREFA',actions:[{id:'done',title:'Feito'},{id:'later',title:'Mais tarde'},{id:'more',title:'Adiar…'}]}]});const pd=await LN.getPending();const old=pd.notifications.filter(x=>x.id!==999999);if(old.length)await LN.cancel({notifications:old});
+const L=[],n=Date.now(),at=(d,h,m)=>{const x=new Date(d+'T12:00');x.setHours(h,m,0,0);return x},add=(w,ti,b,x)=>{if(w.getTime()>n+5000)L.push({title:ti,body:b||'',actionTypeId:x&&x.id?'TAREFA':undefined,extra:x,schedule:{at:w,allowWhileIdle:true}})};
 S.tasks.filter(t=>t.st!=='feito'&&(!t.priv||t.c===S.me)).forEach(t=>{
-if(t.lt&&t.due){add(at(wd(t),9,0),'Voltou do Mais tarde',t.t);return}
-if(t.ch)add(at(t.ch,9,0),'Hora de cobrar '+(t.wn||''),t.t);
-if(t.due&&t.tm){const q=t.tm.split(':'),w=at(t.due,+q[0],+q[1]);w.setMinutes(w.getMinutes()-10);add(w,'Em 10 minutos',t.t)}});
-for(let i=0;i<14;i++){const d=ad(td(),i),R=RV().filter(r=>sch(r,d));if(R.length)add(at(d,8,0),'Rotinas de hoje',R.map(r=>r.t).join(', '))}
+if(t.lt&&t.due){add(at(wd(t),9,0),'Voltou do Mais tarde',t.t,{id:t.id,k:'lt'});return}
+if(t.ch)add(at(t.ch,9,0),'Hora de cobrar '+(t.wn||''),t.t,{id:t.id,k:'ch'});
+const rms=t.rm||[];
+if(rms.length)rms.forEach(r=>add(new Date(r),'🔔 '+t.t,t.next||'',{id:t.id,rm:r}));
+else if(t.due&&t.tm){const q=t.tm.split(':'),w=at(t.due,+q[0],+q[1]);w.setMinutes(w.getMinutes()-10);add(w,'Em 10 minutos',t.t,{id:t.id})}
+else if(t.due)add(at(t.due,9,0),'Vence hoje',t.t,{id:t.id})});
+const Ls=S.tasks.filter(t=>t.st!=='feito'&&!t.lt&&(!t.priv||t.c===S.me)),pl=(n,a,b)=>n+' '+(n===1?a:b);
+for(let i=0;i<7;i++){const d=ad(td(),i),p=[],a=Ls.filter(t=>t.due===d).length,o=i?0:Ls.filter(t=>t.due&&t.due<d).length,c=Ls.filter(t=>t.st==='aguardando'&&t.ch&&(i?t.ch===d:t.ch<=d)).length,r=RV().filter(q=>sch(q,d)).length;
+if(a)p.push(pl(a,'tarefa','tarefas'));if(o)p.push(pl(o,'atrasada','atrasadas'));if(c)p.push(pl(c,'cobrança','cobranças'));if(r)p.push(pl(r,'rotina','rotinas'));
+if(S.ns.sum&&p.length){const q=S.ns.hs.split(':');add(at(d,+q[0],+q[1]),i?'☀️ Bom dia':'☀️ Hoje',p.join(' · '),{k:'sum'})}
+if(S.ns.fd){const q=S.ns.hf.split(':'),m=Ls.filter(t=>t.due===ad(d,1)).length;add(at(d,+q[0],+q[1]),'🌙 Fechar o dia','Escolha o foco de amanhã'+(m?' ('+pl(m,'tarefa','tarefas')+' marcadas)':''),{k:'fd'})}
+if(S.ns.rev&&new Date(d+'T12:00').getDay()===0){const q=S.ns.hr.split(':');add(at(d,+q[0],+q[1]),'🗓 Revisão semanal','Veja o que atrasou e o que está parado',{k:'rev'})}}
 L.sort((a,b)=>a.schedule.at-b.schedule.at);
 await LN.schedule({notifications:L.slice(0,150).map((x,i)=>({...x,id:i+1}))})}catch(e){}},1500)}
+function snz(id,how,rm,k){const t=T(id);if(!t)return;const n=new Date();let d,h;
+if(how==='later'){const w=new Date(n.getTime()+3*36e5);d=ymd(w);h=String(w.getHours()).padStart(2,'0')+':'+String(w.getMinutes()).padStart(2,'0')}
+else{h=rm?rm.slice(11,16):(t.tm||'09:00');d=how==='tmrw'?ad(td(),1):ad(td(),(7-n.getDay())%7||7)}
+t.rm=(t.rm||[]).filter(x=>x!==rm);t.rm.push(d+'T'+h);t.rm.sort();if(!t.due||t.due<d)t.due=d;if(k==='ch')t.ch=d;
+lg(t,'Adiada para '+d+' '+h);render();toast('Adiada para '+fm(d)+' às '+h)}
+function lnL(){if(!isN())return;const LN=Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return;
+LN.addListener('localNotificationActionPerformed',e=>{const x=(e.notification&&e.notification.extra)||{},a=e.actionId;
+if(x.k==='fd')return fd();if(x.k==='sum')return go('hoje');if(x.k==='rev')return rev();if(!x.id)return;const t=T(x.id);
+if(a==='done'){if(t&&t.st!=='feito')fin(x.id)}else if(a==='later')snz(x.id,'later',x.rm,x.k);else if(a==='more')snm([x.id]);else if(t)edit(x.id)})}
+var wT;
+function wdat(){const x=td(),L=V().filter(t=>t.st!=='feito'),it=[],sf=d=>d.slice(8)+'/'+d.slice(5,7),isC=t=>t.st==='aguardando'&&t.ch&&t.ch<=x,
+tmo=(t,d)=>t.tm||(((t.rm||[]).filter(r=>r.slice(0,10)===d)[0]||'').slice(11,16)),
+cmp=d=>(p,q)=>(tmo(p,d)||'99').localeCompare(tmo(q,d)||'99')||q.pri-p.pri;
+L.filter(isC).forEach(t=>it.push({id:t.id,t:t.t,s:'📞 Cobrar '+(t.wn||''),c:'#b7791f'}));
+L.filter(t=>!isC(t)&&t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)).forEach(t=>it.push({id:t.id,t:t.t,s:'Atrasada · 📅 '+sf(t.due),c:'#c0392b'}));
+L.filter(t=>!isC(t)&&!(t.due&&t.due<x)&&(t.foc||t.due===x)).sort(cmp(x)).forEach(t=>{const h=tmo(t,x);it.push({id:t.id,t:t.t,s:(h?'🔔 '+h:t.due?'📅 hoje':'⭐ Foco')+(t.next?' · '+t.next:''),c:'#2f6f5e'})});
+RV().filter(r=>sch(r,x)&&!r.log.includes(x)).forEach(r=>it.push({id:r.id,t:r.t,s:'🔁 Rotina',c:'#5b7fa6'}));
+const hoje=it.length,am=ad(x,1);
+L.filter(t=>t.due===am).sort(cmp(am)).slice(0,4).forEach(t=>{const h=tmo(t,am);it.push({id:t.id,t:t.t,s:'Amanhã'+(h?' · 🔔 '+h:''),c:'#8a8880',nd:1})});
+return{day:x,head:'Hoje · '+hoje+(it.length>hoje?' · amanhã '+(it.length-hoje):''),items:it.slice(0,16)}}
+function pushW(){if(!isN())return;const W=Capacitor.Plugins&&Capacitor.Plugins.WidgetBridge;if(!W)return;clearTimeout(wT);wT=setTimeout(()=>{try{W.update({json:JSON.stringify(wdat())})}catch(e){}},1000)}
+function wOpen(){if(!isN())return;const W=Capacitor.Plugins&&Capacitor.Plugins.WidgetBridge;if(!W)return;
+W.getDone().then(r=>{(r.ids||[]).forEach(id=>{const t=T(id);if(t){if(t.st!=='feito')fin(id)}else{const q=S.rot.find(z=>z.id===id);if(q&&!q.log.includes(td()))rt(id)}})}).catch(()=>{});
+W.getPending().then(r=>{if(!r||!r.id)return;if(r.id==='__quick'){go('hoje');const q=$('#q');if(q)q.focus();return}if(T(r.id))edit(r.id);else if(S.rot.find(x=>x.id===r.id))redit(r.id)}).catch(()=>{})}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)wOpen()});addEventListener('focus',wOpen);
 function render(){save();document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.view));$('#me').textContent=window.meLabel?window.meLabel():(S.me==='eu'?'👤 Eu':'👩 Esposa');document.documentElement.style.setProperty('--z',S.z);const b0=$('.bd'),sl=b0?b0.scrollLeft:0;[...SEL].forEach(i=>{if(!T(i))SEL.delete(i)});document.body.classList.toggle('selm',SEL.size>0);$('#app').className='v-'+S.view;$('#app').innerHTML=`<div class="zm"><button onclick="zm(-.1)">🔍 −</button><span>${Math.round(S.z*100)}%</span><button onclick="zm(.1)">🔍 +</button></div>`+({hoje:vh,quadro:vq,agenda:va,depois:vl,rotinas:vr})[S.view]();const b1=$('.bd');if(b1)b1.scrollLeft=sl;sbr()}
-wake();render();tick();setInterval(tick,30000);
+wake();render();tick();setInterval(tick,30000);setTimeout(wOpen,900);lnL();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script><script src="sync.js"></script></body></html>
