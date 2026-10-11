@@ -29,11 +29,17 @@ jobs:
           cp icon-only.png icon-foreground.png icon-background.png assets/
       - name: Criar projeto Android
         run: npx cap add android
+      - name: Numero da versao (permite atualizar por cima)
+        run: |
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/; s/versionName \"1.0\"/versionName \"1.${{ github.run_number }}\"/" android/app/build.gradle
+          grep -n "versionCode\|versionName" android/app/build.gradle
       - name: Gerar icones
         run: npx capacitor-assets generate --android
       - name: Permissoes de notificacao
         run: |
           sed -i 's#<application#<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/><uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/><uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/><application#' android/app/src/main/AndroidManifest.xml
+      - name: Widget
+        run: bash widget.sh
       - name: Sincronizar
         run: npx cap sync android
       - name: Chave de assinatura fixa
