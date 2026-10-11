@@ -356,7 +356,7 @@ cat > $R/layout/widget_item.xml <<'EOF'
         android:layout_weight="1"
         android:orientation="horizontal"
         android:gravity="center_vertical">
-        <View
+        <TextView
             android:id="@+id/wbar"
             android:layout_width="4dp"
             android:layout_height="32dp"
