@@ -23,13 +23,13 @@ footer{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1p
 .bar{display:flex;gap:6px;padding:8px 10px}.bar input{margin:0}.bar button{border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:0 12px;font-size:18px;color:var(--tx)}.bar button.on{background:var(--r)}
 nav{display:flex}nav button{flex:1;border:0;background:none;padding:10px 0;font:inherit;font-size:12px;white-space:nowrap;color:var(--mu)}nav button.on{color:var(--ac);font-weight:700}
 #tt{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:8px 14px;border-radius:20px;opacity:0;transition:.2s;z-index:30;pointer-events:none;font-size:14px;max-width:90%}#tt.on{opacity:1;pointer-events:auto}
-details.mo{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:10px 0}details.mo summary{cursor:pointer;color:var(--mu)}.pills{display:flex;gap:6px;margin-bottom:6px}.pills .col.mini{margin:0}.bar .qb{font-size:13px;padding:0 10px;white-space:nowrap}
+h4.hoje{font-size:1.4em;margin:6px 0 8px}h4.hoje+.card,h4.hoje~.card:first-of-type{}details.mo{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;margin:10px 0}details.mo summary{cursor:pointer;color:var(--mu)}.pills{display:flex;gap:6px;margin-bottom:6px}.pills .col.mini{margin:0}.bar .qb{font-size:13px;padding:0 10px;white-space:nowrap}
 @media(min-width:760px){main{max-width:1500px;margin:0 auto}#app.v-hoje,#app.v-agenda,#app.v-depois,#app.v-rotinas{max-width:720px;margin:0 auto}.col{flex:1 1 0;min-width:calc(240px*var(--z,1));max-width:420px}.bd{align-items:flex-start}footer .bar,footer nav,footer .sbar{max-width:720px;margin:0 auto}.mb{align-items:center;justify-content:center}.md{max-width:560px;border-radius:16px;max-height:86%}.hn{display:none}#tt{top:80px}}
 </style></head><body>
 <header><b>✅ Tarefas</b><span><button id="me" onclick="S.me=S.me==='eu'?'ela':'eu';render()"></button><button onclick="imp()">⤓</button><button onclick="bell()">🔔</button><button onclick="tp()">＋ Modelo</button></span></header>
 <main id="app"></main><div id="m"></div><div id="tt"></div>
 <footer><div id="sb" class="sbar" style="display:none"></div><div class="bar"><input id="q" placeholder="Anotar rápido…" onkeydown="if(event.key==='Enter')add('ideia')"><button class="qb" onclick="add('ideia')">💡 Ideia</button><button class="qb" onclick="add('fazer')">📋 A fazer</button></div>
-<nav><button data-v="hoje" onclick="go('hoje')">🎯 Hoje</button><button data-v="quadro" onclick="go('quadro')">🗂 Quadro</button><button data-v="agenda" onclick="go('agenda')">📅 Agenda</button><button data-v="depois" onclick="go('depois')">⏳ Mais tarde</button><button data-v="rotinas" onclick="go('rotinas')">🔁 Rotinas</button></nav></footer>
+<nav><button data-v="hoje" onclick="go('hoje')">🎯 Hoje</button><button data-v="quadro" onclick="go('quadro')">🗂 Quadro</button><button data-v="depois" onclick="go('depois')">⏳ Mais tarde</button><button data-v="rotinas" onclick="go('rotinas')">🔁 Rotinas</button></nav></footer>
 <script>
 const $=s=>document.querySelector(s),ymd=d=>{d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
 td=()=>ymd(),ad=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return ymd(d)},
@@ -44,7 +44,8 @@ mk({t:'Renovar seguro do carro',next:'Pedir 3 cotações',due:t,foc:true,min:5,s
 mk({t:'Reunião de pais na escola',due:ad(t,1),tm:'19:00',who:'nos'}),
 mk({t:'Presente de aniversário (surpresa)',st:'ideia',priv:true})]}
 let S;try{S=JSON.parse(localStorage.getItem('tf1'))}catch(e){}
-S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];if(S.hf===undefined)S.hf=1;S.ns=Object.assign({sum:1,fd:1,rev:1,hs:'08:00',hf:'21:00',hr:'18:00'},S.ns||{});
+S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];if(S.hf===undefined)S.hf=1;S.ns=Object.assign({sum:1,fd:1,rev:1,hs:'08:00',hf:'21:00',hr:'18:00'},S.ns||{});if(S.view==='agenda')S.view='hoje';
+if(S.mig!==2){S.tasks.forEach(t=>{if(t.ch){if(t.st==='aguardando'||!t.due)t.due=t.ch;t.ch=''}const r0=(t.rm||[])[0];if(r0){if(!t.due)t.due=r0.slice(0,10);if(!t.tm&&t.due===r0.slice(0,10))t.tm=r0.slice(11,16)}t.rm=[];t.foc=false});S.mig=2}
 const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave();schedN();pushW()},
 T=id=>S.tasks.find(t=>t.id===id),V=()=>S.tasks.filter(t=>(!t.priv||t.c===S.me)&&!t.lt),
 go=v=>{S.view=v;render()};
@@ -63,14 +64,14 @@ function pick(t,o){P=o;modal(`<h3>${t}</h3>`+o.map((x,i)=>`<button class="b g" o
 function lg(t,m){t.log.push({d:td(),m});t.up=td()}
 function gc(t){const a=t.due.replace(/-/g,'');let d;if(t.tm){const h=+t.tm.slice(0,2);d=a+'T'+t.tm.replace(':','')+'00/'+a+'T'+String(Math.min(h+1,23)).padStart(2,'0')+t.tm.slice(3)+'00'}else d=a+'/'+ad(t.due,1).replace(/-/g,'');return'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t.t)+'&dates='+d+'&details='+encodeURIComponent(t.next||t.nt)}
 function card(t,b){const dn=t.st==='feito',age=dd(td(),t.up),ac=age>=7?'cr':age>=3?'cy':'cg',sd=t.subs.filter(s=>s.d).length,w=t.st==='aguardando',dg=(t.ph||'').replace(/\D/g,''),wa=dg.length<=11?'55'+dg:dg;
-return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${t.foc?'⭐ ':''}${esc(t.t)}</div><div class="ch">${t.due?`<span class="c${t.due<td()&&!dn?' cr':''}">📅 ${t.due.slice(8)}/${t.due.slice(5,7)}${t.tm?' '+t.tm:''}</span>`:''}<span class="c">${t.who==='nos'?'👫':t.who==='ela'?'👩':'👤'} ${WHO[t.who]}</span>${t.priv?'<span class="c">🔒</span>':''}${t.min?`<span class="c">⏱ ${t.min}min</span>`:''}${nrb(t)}${!dn&&age>0?`<span class="c ${ac}">${age}d parada</span>`:''}</div>`
+return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${esc(t.t)}</div><div class="ch">${t.due?`<span class="c${t.due<td()&&!dn?' cr':''}">📅 ${t.due.slice(8)}/${t.due.slice(5,7)}${t.tm?' '+t.tm:''}</span>`:''}${t.who!=='eu'?`<span class="c">${t.who==='nos'?'👫':'👩'} ${WHO[t.who]}</span>`:''}${t.priv?'<span class="c">🔒</span>':''}${!dn&&t.st!=='ideia'&&age>=3?`<span class="c ${ac}">${age}d parada</span>`:''}</div>`
 +(dn?'':t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')
-+(w?`<div class="wt">⏳ ${esc(t.wn||'alguém')}${t.ch?' · cobrar '+t.ch.slice(8)+'/'+t.ch.slice(5,7):''}<div class="r3">${dg?`<a class="b g" href="tel:${dg}">📞 Ligar</a><a class="b g" target="_blank" href="https://wa.me/${wa}">💬 Zap</a>`:''}<button class="b" onclick="cb('${t.id}')">Cobrei</button></div></div>`:'')
++(w?`<div class="wt">⏳ ${esc(t.wn||'alguém')}<div class="r3">${dg?`<a class="b g" href="tel:${dg}">📞 Ligar</a><a class="b g" target="_blank" href="https://wa.me/${wa}">💬 Zap</a>`:''}<button class="b" onclick="cb('${t.id}')">Cobrei</button></div></div>`:'')
 +(t.subs.length?`<div class="pg"><i style="width:${sd/t.subs.length*100}%"></i></div>`+t.subs.map((s,i)=>`<label class="ck"><input type="checkbox"${s.d?' checked':''} onchange="sub('${t.id}',${i})"> ${esc(s.t)}</label>`).join(''):'')
-+(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="fc('${t.id}')">⭐</button><button onclick="sn('${t.id}')">💤</button><button onclick="hp('${t.id}')">🤝</button>${t.due?`<a href="${gc(t)}" target="_blank">🗓</a>`:''}<button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
++(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="sn('${t.id}')">📅</button><button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
 function nrb(t){const n=new Date(),s=ymd(n)+'T'+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),r=(t.rm||[]).filter(q=>q>=s)[0];return r?`<span class="c">🔔 ${(r.slice(0,10)===td()?'':fm(r.slice(0,10))+' ')+r.slice(11,16)}</span>`:''}
-function revb(L){const x=td(),n=L.filter(t=>t.due&&dd(x,t.due)>=7).length;return`<button class="b g" onclick="rev()">🗓 Revisão semanal${n?' · ⚠️ '+n+' atrasada'+(n>1?'s':'')+' há 7+ dias':''}</button>`}
-function rev(){const x=td(),L=V().filter(t=>t.st!=='feito'),od=L.filter(t=>t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)),
+function revb(L){const x=td(),n=L.filter(t=>t.due&&dd(x,t.due)>=7).length;return`<button class="b g" onclick="rev()">🗓 Revisão${n?' · ⚠️ '+n:''}</button>`}
+function rev(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.st!=='ideia'),od=L.filter(t=>t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)),
 stall=L.filter(t=>!od.includes(t)&&t.st!=='ideia'&&dd(x,t.up)>=7&&!(t.due&&t.due>x)),
 dn=S.tasks.reduce((n,t)=>n+t.log.filter(l=>l.m==='Concluída'&&dd(x,l.d)<7).length,0),rn=S.rot.reduce((n,r)=>n+r.log.filter(d=>dd(x,d)<7).length,0),sk=S.sk.l===x||S.sk.l===ad(x,-1)?S.sk.n:0,
 row=(t,i)=>`<label class="ck"><input type="checkbox" class="rvk" value="${t.id}"> <span>${esc(t.t)} <span class="mu">· ${i}</span></span></label>`;
@@ -93,47 +94,42 @@ function fin(id){const t=T(id);if(t.st==='feito'){t.st='fazer';lg(t,'Reaberta')}
 if(S.sk.l!==td()){S.sk.n=S.sk.l===ad(td(),-1)?S.sk.n+1:1;S.sk.l=td()}
 if(t.per){const n=mk({...t,id:uid(),st:'fazer',lt:true,log:[],subs:t.subs.map(s=>({t:s.t,d:0})),due:addm(td(),t.per),up:td(),foc:false});S.tasks.push(n);U.nid=n.id}toast('Feito! 🎉'+(U.nid?' Volta no Mais tarde.':''),1)}render()}
 function sn(id){snm([id])}
-function snm(ids,ti){const w=new Date().getDay(),sun=ad(td(),(7-w)%7||7),sat=ad(td(),(6-w+7)%7||7);
-pick(ti||'Adiar para…',[['🌙 Hoje à noite',()=>post(ids,td(),'20:00')],['☀️ Amanhã',()=>post(ids,ad(td(),1))],['🏖 Sábado',()=>post(ids,sat)],['🗓 Semana que vem (domingo)',()=>post(ids,sun)],['📅 Escolher data…',()=>pdate(ids)]])}
+function snm(ids,ti){const o=[['🌙 Hoje à noite',()=>post(ids,td(),'20:00')]],cap=z=>z[0].toUpperCase()+z.slice(1);
+for(let i=1;i<=7;i++){const d=ad(td(),i);o.push([i===1?'☀️ Amanhã':'📅 '+cap(new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'numeric'})),()=>post(ids,d)])}
+o.push(['🗓 Escolher outra data…',()=>pdate(ids)]);pick(ti||'Mover para…',o)}
 function pdate(ids){window._pid=ids;modal(`<h3>📅 Escolher data</h3><input id="pdt" type="date" value="${ad(td(),1)}"><button class="b" onclick="post(window._pid,$('#pdt').value||td())">Adiar</button>`)}
-function post(ids,d,tm){ids.forEach(id=>{const t=T(id);if(!t)return;t.due=d;if(tm)t.tm=tm;t.rm=[...new Set((t.rm||[]).map(r=>r.slice(0,10)<d?d+r.slice(10):r))].sort();if(t.ch&&t.ch<d)t.ch=d;lg(t,'Adiada para '+d)});SEL.clear();cl();render();toast(ids.length+' adiada'+(ids.length>1?'s':'')+' para '+fm(d))}
-function cb(id){const t=T(id),s=n=>()=>{t.ch=ad(td(),n);lg(t,'Cobrou '+t.wn+'. Nova cobrança: '+t.ch);cl();render()};pick('Cobrei! Cobrar de novo em…',[['Amanhã',s(1)],['3 dias',s(3)],['1 semana',s(7)]])}
+function post(ids,d,tm){ids.forEach(id=>{const t=T(id);if(!t)return;t.due=d;if(tm)t.tm=tm;lg(t,'Movida para '+d)});SEL.clear();cl();render();toast(ids.length+' movida'+(ids.length>1?'s':'')+' para '+fm(d))}
+function cb(id){const t=T(id),s=n=>()=>{t.due=ad(td(),n);lg(t,'Cobrou '+t.wn+'. Novo dia: '+t.due);cl();render()};pick('Cobrei! Cobrar de novo em…',[['Amanhã',s(1)],['3 dias',s(3)],['1 semana',s(7)]])}
 function hp(id){const o=S.me==='eu'?'ela':'eu';modal(`<h3>🤝 Pedir ajuda a ${WHO[o]}</h3><label>Comentário<textarea id="hc"></textarea></label><button class="b" onclick="hg('${id}','${o}')">Enviar</button>`)}
 function hg(id,o){const t=T(id);t.who=o;t.priv=false;lg(t,'Pedido a '+WHO[o]+': '+$('#hc').value);cl();render()}
-function fd(){const L=V().filter(t=>t.st!=='feito'&&t.st!=='aguardando');modal(`<h3>🌙 Fechar o dia</h3><p class="mu">Escolha as tarefas de foco para amanhã.</p><div class="pl">${L.map(t=>`<label class="ck"><input type="checkbox" value="${t.id}"${t.foc?' checked':''}> ${esc(t.t)}</label>`).join('')||'Nada pendente 🎉'}</div><button class="b" onclick="fg()">Pronto</button>`)}
-function fg(){const c=[...document.querySelectorAll('.pl input')].filter(x=>x.checked).map(x=>x.value);V().forEach(t=>{if(c.includes(t.id)){t.foc=true;if(!t.due||t.due<=td())t.due=ad(td(),1)}else if(t.st!=='aguardando')t.foc=false});cl();render()}
+function fd(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.st!=='ideia'&&t.due&&t.due<=x),dn=S.tasks.reduce((n,t)=>n+t.log.filter(l=>l.m==='Concluída'&&l.d===x).length,0);
+modal(`<h3>🌙 Fechar o dia</h3><p class="mu">✅ ${dn} concluída${dn===1?'':'s'} hoje.</p>${L.length?`<p class="mu">Marque o que passa para amanhã:</p><div class="pl">${L.map(t=>`<label class="ck"><input type="checkbox" value="${t.id}" checked> ${esc(t.t)}</label>`).join('')}</div><button class="b" onclick="fg()">Passar para amanhã</button>`:'<p>Nada pendente para hoje 🎉</p>'}`)}
+function fg(){const c=[...document.querySelectorAll('.pl input')].filter(e=>e.checked).map(e=>e.value);if(c.length)post(c,ad(td(),1));else cl()}
 function tp(){pick('Modelo',[['🔧 Contratar prestador',()=>{cl();edit(null,{t:'Contratar ',subs:['Pedir orçamentos','Comparar','Agendar','Pagar','Avaliar'].map(x=>({t:x,d:0}))})}],['💳 Conta do mês',()=>{cl();edit(null,{t:'Pagar ',rec:'m',due:td(),subs:[{t:'Conferir valor',d:0},{t:'Pagar',d:0}]})}],['Em branco',()=>{cl();edit()}]])}
-function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;window._rm=(t.rm||[]).slice();
+function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;
 const o=(a,v)=>a.map(([k,l])=>`<option value="${k}"${k==v?' selected':''}>${l}</option>`).join(''),i=(k,l,ty)=>`<label>${l}<input id="f${k}" type="${ty||'text'}" value="${esc(t[k]||'')}"></label>`;
 modal(`<h3>${id?'Editar':'Nova'} tarefa</h3>${i('t','Título')}
-<label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde']]),t.lt?'depois':t.st)}</select></label>
-<div class="r2">${i('due','Data','date')}${i('tm','Hora','time')}</div>
-<label>Lembretes (avisa nestes dias e horas)</label><div class="r2"><input id="frmi" type="datetime-local" value="${t.due||td()}T09:00"><button class="b g" onclick="radd()">＋ Adicionar</button></div><div id="rml" class="ch"></div>
+<label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde (some até o dia)']]),t.lt?'depois':t.st)}</select></label>
+<div class="r2">${i('due','Dia','date')}${i('tm','Hora (avisa neste horário)','time')}</div>
 <label>Subtarefas (uma por linha)<textarea id="fsb">${esc(t.subs.map(s=>s.t).join('\n'))}</textarea></label>
 <label>Anotações<textarea id="fnt">${esc(t.nt)}</textarea></label>
 <details class="mo"><summary>⚙️ Mais opções</summary>
-${i('next','Próxima ação (passo físico, ex.: ligar para…)')}
-<div class="r2"><label>Prioridade<select id="fpri">${o([[0,'Pode esperar'],[1,'Importante'],[2,'Urgente']],t.pri)}</select></label><label>Responsável<select id="fwho">${o(Object.entries(WHO),t.who)}</select></label></div>
-<label class="ck"><input id="fpv" type="checkbox"${t.priv?' checked':''}> 🔒 Só eu posso ver</label>
-<div class="r2">${i('wn','Aguardando quem?')}${i('ph','Telefone','tel')}</div>${i('ch','Cobrar em','date')}
+${i('next','Próxima ação (ex.: ligar para o João)')}
+<div class="r2">${i('wn','Aguardando quem?')}${i('ph','Telefone','tel')}</div>
 <div class="r2"><label>Ao concluir, voltar em<select id="fper">${o([[0,'Não repetir'],[1,'1 mês'],[3,'3 meses'],[6,'6 meses'],[12,'1 ano'],[24,'2 anos']],t.per||0)}</select></label><label>Ou outro prazo (meses)<input id="fper2" type="number" min="1" value="${t.per&&![1,3,6,12,24].includes(t.per)?t.per:''}"></label></div>
-${i('ant','Mais tarde: voltar quantos dias antes?','number')}${i('min','Minutos estimados (modo 5 min)','number')}
+<label class="ck"><input id="fpv" type="checkbox"${t.priv?' checked':''}> 🔒 Só eu posso ver</label>
 </details>
 ${t.log.length?`<div class="lg">${t.log.slice(-4).map(l=>l.d+': '+esc(l.m)).join('<br>')}</div>`:''}
-<div class="r2"><button class="b" onclick="sv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rm('${t.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`);rr()}
-const rfm=x=>x.slice(8,10)+'/'+x.slice(5,7)+' '+x.slice(11,16);
-function rr(){$('#rml').innerHTML=window._rm.map((x,i)=>`<span class="c">🔔 ${rfm(x)} <b onclick="rdl(${i})" style="cursor:pointer;margin-left:6px">✕</b></span>`).join('')}
-function radd(){const v=$('#frmi').value;if(!v)return toast('Escolha o dia e a hora');if(!window._rm.includes(v))window._rm.push(v);window._rm.sort();rr()}
-function rdl(i){window._rm.splice(i,1);rr()}
-function sv(ex){const t=window._t,g=k=>$('#f'+k).value;if(!g('t').trim())return toast('Dê um título');if(g('st')==='depois'&&!g('due'))return toast('Mais tarde precisa de uma data');
-Object.assign(t,{t:g('t').trim(),next:g('next'),st:g('st')==='depois'?'fazer':g('st'),lt:g('st')==='depois',per:+g('per2')||+g('per')||0,ant:g('ant')===''?14:+g('ant'),pri:+g('pri'),who:g('who'),priv:$('#fpv').checked,due:g('due'),tm:g('tm'),min:+g('min')||0,wn:g('wn'),ph:g('ph'),ch:g('ch'),nt:g('nt'),rm:window._rm.slice()});if(!t.due&&t.rm.length)t.due=t.rm[0].slice(0,10);
-const old=t.subs;t.subs=g('sb').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,d:(old.find(s=>s.t===x)||{}).d||0}));
+<div class="r2"><button class="b" onclick="sv(${!!id})">Salvar</button>${id?`<button class="b d" onclick="rm('${t.id}')">Excluir</button>`:'<button class="b g" onclick="cl()">Cancelar</button>'}</div>`)}
+function sv(ex){const t=window._t,g=k=>$('#f'+k).value,ide=g('st')==='ideia';if(!g('t').trim())return toast('Dê um título');if(g('st')==='depois'&&!g('due'))return toast('Mais tarde precisa de um dia');
+Object.assign(t,{t:g('t').trim(),next:g('next'),st:g('st')==='depois'?'fazer':g('st'),lt:g('st')==='depois',per:+g('per2')||+g('per')||0,priv:$('#fpv').checked,due:ide?'':g('due'),tm:ide||!g('due')?'':g('tm'),wn:g('wn'),ph:g('ph'),nt:g('nt')});
+const old=t.subs;t.subs=g('sb').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,d:(old.find(q=>q.t===x)||{}).d||0}));
 t.up=td();if(!ex)S.tasks.push(t);cl();render()}
 function rm(id){SEL.delete(id);S.tasks=S.tasks.filter(t=>t.id!==id);cl();render()}
 function sm(x){x=x.trim().replace(/\s+/g,' ');const l=x.toLowerCase();let d='';if(/amanh[ãa]/.test(l))d=ad(td(),1);else if(/\bhoje\b/.test(l))d=td();
 let t=x,n='';if(x.length>70){t=x.split(/[.!?;]/)[0]||x;if(t.length>60)t=t.slice(0,60).replace(/\s\S*$/,'')+'…';n=x}
 return{t:t[0].toUpperCase()+t.slice(1),nt:n,due:d,st:d?'fazer':'ideia'}}
-function add(st){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me,...sm(v),st}));$('#q').value='';toast(st==='ideia'?'Guardada em Ideias':'Criada em A fazer');render()}
+function add(st){const v=$('#q').value.trim();if(!v)return;S.tasks.push(mk({c:S.me,...sm(v),st,...(st==='ideia'?{due:''}:{})}));$('#q').value='';toast(st==='ideia'?'Guardada em Ideias':'Criada em A fazer');render()}
 function bellm(){const c=(k,l,h)=>`<label class="ck"><input id="n${k}" type="checkbox"${S.ns[k]?' checked':''}> <span style="flex:1">${l}</span><input id="n${h}" type="time" value="${S.ns[h]}" style="width:auto;margin:0"></label>`;
 modal(`<h3>🔔 Avisos</h3><p class="mu">Além dos lembretes de cada tarefa, o app pode avisar:</p>${c('sum','☀️ Resumo da manhã','hs')}${c('fd','🌙 Fechar o dia','hf')}${c('rev','🗓 Revisão semanal (domingo)','hr')}
 <button class="b" onclick="nsv()">Salvar</button><button class="b g" onclick="ntest()">Enviar teste agora</button>`)}
@@ -147,12 +143,16 @@ function notify(k,m){if(S.nt[k])return;S.nt[k]=1;save();toast(m);if(isN())return
 function tick(){wake();const n=new Date(),h=n.getHours()*60+n.getMinutes();V().forEach(t=>{if(t.st==='feito')return;
 if(t.ch&&t.ch<=td()&&h>=540)notify('c'+t.id+t.ch,'Hora de cobrar '+(t.wn||'')+': '+t.t);
 if(t.due===td()&&t.tm){const m=+t.tm.slice(0,2)*60+ +t.tm.slice(3);if(h>=m-10&&h<m+60)notify('e'+t.id+t.tm,'Às '+t.tm+': '+t.t)}})}
-function vh(){const x=td();let L=V().filter(t=>t.st!=='feito');const sec=(h,a,e)=>a.length?`<h4>${h}</h4>`+a.map(y=>card(y)).join(''):e?`<h4>${h}</h4><p class="mu">${e}</p>`:'';
-const sk=S.sk.l===x||S.sk.l===ad(x,-1)?S.sk.n:0;
-let b=`<div class="hd"><b>${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</b><div class="mu">🔥 ${sk} dia(s) seguidos concluindo tarefas</div></div><div class="r2"><button class="b ${S.five?'':'g'}" onclick="S.five=!S.five;render()">⚡ Modo 5 min</button><button class="b g" onclick="fd()">🌙 Fechar o dia</button></div>`+revb(L)+rstrip();
-if(S.five)return b+sec('Tarefas de até 5 minutos',L.filter(t=>t.min&&t.min<=5),'Nenhuma tarefa de 5 min ou menos. Preencha "minutos estimados".');
-const c=L.filter(t=>t.st==='aguardando'&&t.ch&&t.ch<=x),f=L.filter(t=>!c.includes(t)&&(t.foc||(t.due&&t.due<=x&&t.st!=='aguardando'))).sort((a,b)=>b.pri-a.pri),p=L.filter(t=>!c.includes(t)&&!f.includes(t)&&dd(x,t.up)>=5);
-return b+sec('📞 Cobrar hoje',c)+sec('🎯 Foco de hoje',f,'Nada em foco. Use ⭐ numa tarefa ou "Fechar o dia".')+sec('🧊 Paradas há 5+ dias',p)}
+function vh(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.st!=='ideia'&&t.due),tmv=t=>t.tm||'99:99',
+srt=(a,byDay)=>a.sort((p,q)=>(byDay?p.due.localeCompare(q.due):0)||tmv(p).localeCompare(tmv(q))||q.pri-p.pri),cap=z=>z[0].toUpperCase()+z.slice(1),
+day=d=>cap(new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'short'})),
+sec=(h,a,empty,cls)=>`<h4${cls?' class="'+cls+'"':''}>${h} <span class="mu">${a.length||''}</span></h4>`+(a.length?a.map(t=>card(t)).join(''):`<p class="mu">${empty}</p>`);
+let h=`<div class="r2"><button class="b g" onclick="fd()">🌙 Fechar o dia</button>${revb(V().filter(t=>t.st!=='feito'&&t.st!=='ideia'))}</div>`+rstrip();
+h+=sec('🎯 Hoje',srt(L.filter(t=>t.due<=x),1),'Nada para hoje 🎉','hoje');
+for(let i=1;i<=7;i++){const d=ad(x,i);h+=sec(i===1?'Amanhã · '+fm(d):day(d),srt(L.filter(t=>t.due===d)),'—')}
+const later=srt(L.filter(t=>t.due>ad(x,7)),1);
+if(later.length)h+=`<details class="mo"><summary>Mais para frente (${later.length})</summary>${later.map(t=>card(t)).join('')}</details>`;
+return h}
 function vq(){const H={ideia:'hi',feito:'hf'},IC={ideia:'💡',feito:'✅'},cnt=k=>V().filter(t=>t.st===k).length;let p='';
 ST.forEach(([k])=>{if(H[k]&&S[H[k]])p+=`<span class="col mini" data-st="${k}" onclick="S.${H[k]}=0;render()">${IC[k]} ${cnt(k)}</span>`});
 return(p?'<div class="pills">'+p+'</div>':'')+'<div class="bd">'+ST.map(([k,l])=>{if(H[k]&&S[H[k]])return'';const a=V().filter(t=>t.st===k);
@@ -224,12 +224,12 @@ modal(`<h3>🔍 Revisar ${L.length} tarefa${L.length>1?'s':''}</h3><p class="mu"
 function rx(){const ids=[...document.querySelectorAll('.rk')].filter(x=>x.checked).map(x=>x.value);if(!ids.length)return toast('Nenhuma marcada');
 U={bulk:S.tasks.filter(t=>ids.includes(t.id))};S.tasks=S.tasks.filter(t=>!ids.includes(t.id));SEL.clear();cl();render();toast(ids.length+' excluída'+(ids.length>1?'s':''),1)}
 const DS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],fm=x=>x?x.slice(8)+'/'+x.slice(5,7)+(x.slice(0,4)!==td().slice(0,4)?'/'+x.slice(2,4):''):'',
-perl=n=>n%12===0?(n===12?'1 ano':n/12+' anos'):n+(n===1?' mês':' meses'),wd=t=>ad(t.due,-(t.ant==null?14:t.ant));
+perl=n=>n%12===0?(n===12?'1 ano':n/12+' anos'):n+(n===1?' mês':' meses'),wd=t=>t.due;
 function addm(d,m){const x=new Date(d+'T12:00');x.setMonth(x.getMonth()+m);return ymd(x)}
-function wake(){let c=0;S.tasks.forEach(t=>{if(t.lt&&t.due&&wd(t)<=td()){t.lt=false;t.st='fazer';t.foc=true;lg(t,'Voltou do Mais tarde');c++;if(!t.priv||t.c===S.me)notify('w'+t.id+t.due,'Voltou do Mais tarde: '+t.t)}});if(c){save();if(S.rot)render()}}
-function wk1(id){const t=T(id);t.lt=false;t.st='fazer';t.foc=true;lg(t,'Trazida do Mais tarde');render()}
+function wake(){let c=0;S.tasks.forEach(t=>{if(t.lt&&t.due&&t.due<=td()){t.lt=false;t.st='fazer';lg(t,'Voltou do Mais tarde');c++}});if(c){save();render();toast(c+' tarefa'+(c>1?'s':'')+' voltou'+(c>1?'ram':'')+' do Mais tarde')}}
+function wk1(id){const t=T(id);t.lt=false;t.st='fazer';t.due=td();lg(t,'Trazida do Mais tarde');render()}
 function vl(){const L=S.tasks.filter(t=>t.lt&&(!t.priv||t.c===S.me)).sort((a,b)=>wd(a).localeCompare(wd(b)));
-return'<p class="mu">Tarefas escondidas. Voltam sozinhas para o A fazer perto da data.</p>'+(L.map(t=>`<div class="card${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${esc(t.t)}</div><div class="ch"><span class="c">🔁 volta em ${fm(wd(t))} · faltam ${Math.max(0,dd(wd(t),td()))}d</span><span class="c">🗓 fazer até ${fm(t.due)}</span>${t.per?`<span class="c">↻ a cada ${perl(t.per)}</span>`:''}</div>`+(t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')+(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="wk1('${t.id}')">⏩ Trazer agora</button><button onclick="edit('${t.id}')">✏️</button></div>`)+'</div>').join('')||'<p class="mu">Nada por aqui. Numa tarefa, toque em ✏️ e escolha a etapa "Mais tarde".</p>')}
+return'<p class="mu">Tarefas escondidas. Voltam sozinhas para o A fazer perto da data.</p>'+(L.map(t=>`<div class="card${SEL.has(t.id)?' sel':''}" data-id="${t.id}">${SEL.size?'<span class="sk">✓</span>':''}<div class="tt">${esc(t.t)}</div><div class="ch"><span class="c">🔁 volta em ${fm(wd(t))} · faltam ${Math.max(0,dd(wd(t),td()))}d</span>${t.per?`<span class="c">↻ a cada ${perl(t.per)}</span>`:''}</div>`+(t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')+(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="wk1('${t.id}')">⏩ Trazer agora</button><button onclick="edit('${t.id}')">✏️</button></div>`)+'</div>').join('')||'<p class="mu">Nada por aqui. Numa tarefa, toque em ✏️ e escolha a etapa "Mais tarde".</p>')}
 function sch(r,d){const x=new Date(d+'T12:00');if(r.k==='w')return r.d.includes(x.getDay());return x.getDate()===Math.min(r.m,new Date(x.getFullYear(),x.getMonth()+1,0).getDate())}
 function rs(r){let n=0;for(let i=0;i<400;i++){const d=ad(td(),-i);if(!sch(r,d))continue;if(r.log.includes(d))n++;else if(d!==td())break}return n}
 function rnext(r){for(let i=0;i<62;i++){const d=ad(td(),i);if(sch(r,d))return d}return''}
@@ -257,41 +257,30 @@ function schedN(){if(!isN())return;const LN=Capacitor.Plugins&&Capacitor.Plugins
 nsT=setTimeout(async()=>{try{let p=await LN.checkPermissions();if(p.display==='prompt'||p.display==='prompt-with-rationale')p=await LN.requestPermissions();if(p.display!=='granted')return;
 await LN.registerActionTypes({types:[{id:'TAREFA',actions:[{id:'done',title:'Feito'},{id:'later',title:'Mais tarde'},{id:'more',title:'Adiar…'}]}]});const pd=await LN.getPending();const old=pd.notifications.filter(x=>x.id!==999999);if(old.length)await LN.cancel({notifications:old});
 const L=[],n=Date.now(),at=(d,h,m)=>{const x=new Date(d+'T12:00');x.setHours(h,m,0,0);return x},add=(w,ti,b,x)=>{if(w.getTime()>n+5000)L.push({title:ti,body:b||'',actionTypeId:x&&x.id?'TAREFA':undefined,extra:x,schedule:{at:w,allowWhileIdle:true}})};
-S.tasks.filter(t=>t.st!=='feito'&&(!t.priv||t.c===S.me)).forEach(t=>{
-if(t.lt&&t.due){add(at(wd(t),9,0),'Voltou do Mais tarde',t.t,{id:t.id,k:'lt'});return}
-if(t.ch)add(at(t.ch,9,0),'Hora de cobrar '+(t.wn||''),t.t,{id:t.id,k:'ch'});
-const rms=t.rm||[];
-if(rms.length)rms.forEach(r=>add(new Date(r),'🔔 '+t.t,t.next||'',{id:t.id,rm:r}));
-else if(t.due&&t.tm){const q=t.tm.split(':'),w=at(t.due,+q[0],+q[1]);w.setMinutes(w.getMinutes()-10);add(w,'Em 10 minutos',t.t,{id:t.id})}
-else if(t.due)add(at(t.due,9,0),'Vence hoje',t.t,{id:t.id})});
-const Ls=S.tasks.filter(t=>t.st!=='feito'&&!t.lt&&(!t.priv||t.c===S.me)),pl=(n,a,b)=>n+' '+(n===1?a:b);
-for(let i=0;i<7;i++){const d=ad(td(),i),p=[],a=Ls.filter(t=>t.due===d).length,o=i?0:Ls.filter(t=>t.due&&t.due<d).length,c=Ls.filter(t=>t.st==='aguardando'&&t.ch&&(i?t.ch===d:t.ch<=d)).length,r=RV().filter(q=>sch(q,d)).length;
-if(a)p.push(pl(a,'tarefa','tarefas'));if(o)p.push(pl(o,'atrasada','atrasadas'));if(c)p.push(pl(c,'cobrança','cobranças'));if(r)p.push(pl(r,'rotina','rotinas'));
+S.tasks.filter(t=>t.st!=='feito'&&t.st!=='ideia'&&!t.lt&&t.due&&t.tm&&(!t.priv||t.c===S.me)).forEach(t=>{const q=t.tm.split(':');add(at(t.due,+q[0],+q[1]),t.t,t.st==='aguardando'?'📞 Cobrar '+(t.wn||''):(t.next||''),{id:t.id})});
+const Ls=S.tasks.filter(t=>t.st!=='feito'&&t.st!=='ideia'&&!t.lt&&(!t.priv||t.c===S.me)),pl=(n,a,b)=>n+' '+(n===1?a:b);
+for(let i=0;i<7;i++){const d=ad(td(),i),p=[],a=Ls.filter(t=>t.due===d).length,o=i?0:Ls.filter(t=>t.due&&t.due<d).length,r=RV().filter(q=>sch(q,d)).length;
+if(a)p.push(pl(a,'tarefa','tarefas'));if(o)p.push(pl(o,'atrasada','atrasadas'));if(r)p.push(pl(r,'rotina','rotinas'));
 if(S.ns.sum&&p.length){const q=S.ns.hs.split(':');add(at(d,+q[0],+q[1]),i?'☀️ Bom dia':'☀️ Hoje',p.join(' · '),{k:'sum'})}
-if(S.ns.fd){const q=S.ns.hf.split(':'),m=Ls.filter(t=>t.due===ad(d,1)).length;add(at(d,+q[0],+q[1]),'🌙 Fechar o dia','Escolha o foco de amanhã'+(m?' ('+pl(m,'tarefa','tarefas')+' marcadas)':''),{k:'fd'})}
+if(S.ns.fd){const q=S.ns.hf.split(':'),m=Ls.filter(t=>t.due===ad(d,1)).length;add(at(d,+q[0],+q[1]),'🌙 Fechar o dia','Veja o que passa para amanhã'+(m?' ('+pl(m,'tarefa','tarefas')+' já marcadas)':''),{k:'fd'})}
 if(S.ns.rev&&new Date(d+'T12:00').getDay()===0){const q=S.ns.hr.split(':');add(at(d,+q[0],+q[1]),'🗓 Revisão semanal','Veja o que atrasou e o que está parado',{k:'rev'})}}
 L.sort((a,b)=>a.schedule.at-b.schedule.at);
 await LN.schedule({notifications:L.slice(0,150).map((x,i)=>({...x,id:i+1}))})}catch(e){}},1500)}
-function snz(id,how,rm,k){const t=T(id);if(!t)return;const n=new Date();let d,h;
-if(how==='later'){const w=new Date(n.getTime()+3*36e5);d=ymd(w);h=String(w.getHours()).padStart(2,'0')+':'+String(w.getMinutes()).padStart(2,'0')}
-else{h=rm?rm.slice(11,16):(t.tm||'09:00');d=how==='tmrw'?ad(td(),1):ad(td(),(7-n.getDay())%7||7)}
-t.rm=(t.rm||[]).filter(x=>x!==rm);t.rm.push(d+'T'+h);t.rm.sort();if(!t.due||t.due<d)t.due=d;if(k==='ch')t.ch=d;
-lg(t,'Adiada para '+d+' '+h);render();toast('Adiada para '+fm(d)+' às '+h)}
+function snz(id){const t=T(id);if(!t)return;const w=new Date(Date.now()+3*36e5);t.due=ymd(w);t.tm=String(w.getHours()).padStart(2,'0')+':'+String(w.getMinutes()).padStart(2,'0');lg(t,'Adiada para '+t.due+' '+t.tm);render();toast('Adiada para '+fm(t.due)+' às '+t.tm)}
 function lnL(){if(!isN())return;const LN=Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;if(!LN)return;
 LN.addListener('localNotificationActionPerformed',e=>{const x=(e.notification&&e.notification.extra)||{},a=e.actionId;
 if(x.k==='fd')return fd();if(x.k==='sum')return go('hoje');if(x.k==='rev')return rev();if(!x.id)return;const t=T(x.id);
 if(a==='done'){if(t&&t.st!=='feito')fin(x.id)}else if(a==='later')snz(x.id,'later',x.rm,x.k);else if(a==='more')snm([x.id]);else if(t)edit(x.id)})}
 var wT;
-function wdat(){const x=td(),L=V().filter(t=>t.st!=='feito'),it=[],sf=d=>d.slice(8)+'/'+d.slice(5,7),isC=t=>t.st==='aguardando'&&t.ch&&t.ch<=x,
-tmo=(t,d)=>t.tm||(((t.rm||[]).filter(r=>r.slice(0,10)===d)[0]||'').slice(11,16)),
-cmp=d=>(p,q)=>(tmo(p,d)||'99').localeCompare(tmo(q,d)||'99')||q.pri-p.pri;
-L.filter(isC).forEach(t=>it.push({id:t.id,t:t.t,s:'📞 Cobrar '+(t.wn||''),c:'#b7791f'}));
-L.filter(t=>!isC(t)&&t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)).forEach(t=>it.push({id:t.id,t:t.t,s:'Atrasada · 📅 '+sf(t.due),c:'#c0392b'}));
-L.filter(t=>!isC(t)&&!(t.due&&t.due<x)&&(t.foc||t.due===x)).sort(cmp(x)).forEach(t=>{const h=tmo(t,x);it.push({id:t.id,t:t.t,s:(h?'🔔 '+h:t.due?'📅 hoje':'⭐ Foco')+(t.next?' · '+t.next:''),c:'#2f6f5e'})});
-RV().filter(r=>sch(r,x)&&!r.log.includes(x)).forEach(r=>it.push({id:r.id,t:r.t,s:'🔁 Rotina',c:'#5b7fa6'}));
-const hoje=it.length,am=ad(x,1);
-L.filter(t=>t.due===am).sort(cmp(am)).slice(0,4).forEach(t=>{const h=tmo(t,am);it.push({id:t.id,t:t.t,s:'Amanhã'+(h?' · 🔔 '+h:''),c:'#8a8880',nd:1})});
-return{day:x,head:'Hoje · '+hoje+(it.length>hoje?' · amanhã '+(it.length-hoje):''),items:it.slice(0,16)}}
+function wdat(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.st!=='ideia'&&t.due),it=[],tmv=t=>t.tm||'99:99',sf=d=>d.slice(8)+'/'+d.slice(5,7),
+srt=(a,byDay)=>a.sort((p,q)=>(byDay?p.due.localeCompare(q.due):0)||tmv(p).localeCompare(tmv(q))),
+row=(t,c)=>({id:t.id,t:t.t,s:[t.due<x?'Atrasada '+sf(t.due):'',t.tm||'',t.st==='aguardando'?'📞 '+(t.wn||'cobrar'):''].filter(Boolean).join(' · '),c:t.due<x?'#c0392b':c}),
+day=d=>new Date(d+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'short'});
+const hj=srt(L.filter(t=>t.due<=x),1),r0=RV().filter(r=>sch(r,x)&&!r.log.includes(x)),nh=hj.length+r0.length;
+it.push({h:1,t:'HOJE · '+nh});hj.forEach(t=>it.push(row(t,'#2f6f5e')));r0.forEach(r=>it.push({id:r.id,t:r.t,s:'🔁 Rotina',c:'#5b7fa6'}));
+if(!nh)it.push({id:'',t:'Nada para hoje 🎉',s:'',c:'#2f6f5e',nd:1});
+for(let i=1;i<=7;i++){const d=ad(x,i),a=srt(L.filter(t=>t.due===d));if(!a.length)continue;it.push({h:1,t:(i===1?'AMANHÃ':day(d)).toUpperCase()+' · '+a.length});a.forEach(t=>it.push(row(t,'#8a8880')))}
+return{day:x,head:'Hoje · '+nh,items:it.slice(0,40)}}
 function pushW(){if(!isN())return;const W=Capacitor.Plugins&&Capacitor.Plugins.WidgetBridge;if(!W)return;clearTimeout(wT);wT=setTimeout(()=>{try{W.update({json:JSON.stringify(wdat())})}catch(e){}},1000)}
 function wOpen(){if(!isN())return;const W=Capacitor.Plugins&&Capacitor.Plugins.WidgetBridge;if(!W)return;
 W.getDone().then(r=>{(r.ids||[]).forEach(id=>{const t=T(id);if(t){if(t.st!=='feito')fin(id)}else{const q=S.rot.find(z=>z.id===id);if(q&&!q.log.includes(td()))rt(id)}})}).catch(()=>{});

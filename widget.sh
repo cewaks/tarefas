@@ -221,6 +221,7 @@ package com.tarefas.casa;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -262,7 +263,20 @@ public class WidgetService extends RemoteViewsService {
         JSONObject o = items.getJSONObject(p);
         String id = o.optString("id");
         v.setTextViewText(R.id.wt, o.optString("t"));
-        v.setTextViewText(R.id.ws, o.optString("s"));
+        if (o.optInt("h", 0) == 1) {
+          v.setTextColor(R.id.wt, Color.parseColor("#2f6f5e"));
+          v.setTextViewTextSize(R.id.wt, TypedValue.COMPLEX_UNIT_SP, 12);
+          v.setViewVisibility(R.id.ws, View.GONE);
+          v.setViewVisibility(R.id.wdone, View.GONE);
+          v.setInt(R.id.wbar, "setBackgroundColor", Color.TRANSPARENT);
+          v.setOnClickFillInIntent(R.id.wtxt, new Intent());
+          return v;
+        }
+        String sub = o.optString("s");
+        v.setTextColor(R.id.wt, Color.parseColor("#1d1d1b"));
+        v.setTextViewTextSize(R.id.wt, TypedValue.COMPLEX_UNIT_SP, 14);
+        v.setTextViewText(R.id.ws, sub);
+        v.setViewVisibility(R.id.ws, sub.isEmpty() ? View.GONE : View.VISIBLE);
         int col = Color.parseColor(o.optString("c", "#2f6f5e"));
         v.setInt(R.id.wbar, "setBackgroundColor", col);
         Intent open = new Intent();
