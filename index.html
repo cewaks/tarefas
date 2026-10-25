@@ -44,7 +44,8 @@ mk({t:'Renovar seguro do carro',next:'Pedir 3 cotações',due:t,foc:true,min:5,s
 mk({t:'Reunião de pais na escola',due:ad(t,1),tm:'19:00',who:'nos'}),
 mk({t:'Presente de aniversário (surpresa)',st:'ideia',priv:true})]}
 let S;try{S=JSON.parse(localStorage.getItem('tf1'))}catch(e){}
-S=S||{tasks:seed(),view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];if(S.hf===undefined)S.hf=1;S.ns=Object.assign({sum:1,fd:1,rev:1,hs:'08:00',hf:'21:00',hr:'18:00'},S.ns||{});if(S.view==='agenda')S.view='hoje';
+S=S||{tasks:[],view:'hoje',me:'eu',five:false,sk:{n:0,l:''},nt:{},wk:0};S.z=S.z||1;S.rot=S.rot||[];if(S.hf===undefined)S.hf=1;S.ns=Object.assign({sum:1,fd:1,rev:1,hs:'08:00',hf:'21:00',hr:'18:00'},S.ns||{});if(S.view==='agenda')S.view='hoje';
+window.afterPull=function(){if(S.clean===1)return;const N=['Consertar vazamento da pia','Renovar seguro do carro','Reunião de pais na escola','Presente de aniversário (surpresa)'];S.tasks=S.tasks.filter(t=>!N.includes(t.t));S.clean=1};if(!(window.TAREFAS_CFG&&TAREFAS_CFG.url))afterPull();
 if(S.mig!==2){S.tasks.forEach(t=>{if(t.ch){if(t.st==='aguardando'||!t.due)t.due=t.ch;t.ch=''}const r0=(t.rm||[])[0];if(r0){if(!t.due)t.due=r0.slice(0,10);if(!t.tm&&t.due===r0.slice(0,10))t.tm=r0.slice(11,16)}t.rm=[];t.foc=false});S.mig=2}
 const save=()=>{try{localStorage.setItem('tf1',JSON.stringify(S))}catch(e){}if(window.onSave)window.onSave();schedN();pushW()},
 T=id=>S.tasks.find(t=>t.id===id),V=()=>S.tasks.filter(t=>(!t.priv||t.c===S.me)&&!t.lt),
@@ -68,7 +69,7 @@ return`<div class="card${dn?' dn':''} p${t.pri}${SEL.has(t.id)?' sel':''}" data-
 +(dn?'':t.next?`<div class="nx">➡️ ${esc(t.next)}</div>`:'')
 +(w?`<div class="wt">⏳ ${esc(t.wn||'alguém')}<div class="r3">${dg?`<a class="b g" href="tel:${dg}">📞 Ligar</a><a class="b g" target="_blank" href="https://wa.me/${wa}">💬 Zap</a>`:''}<button class="b" onclick="cb('${t.id}')">Cobrei</button></div></div>`:'')
 +(t.subs.length?`<div class="pg"><i style="width:${sd/t.subs.length*100}%"></i></div>`+t.subs.map((s,i)=>`<label class="ck"><input type="checkbox"${s.d?' checked':''} onchange="sub('${t.id}',${i})"> ${esc(s.t)}</label>`).join(''):'')
-+(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="sn('${t.id}')">📅</button><button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
++(SEL.size?'<div class="ac"><button class="vb">👁 Ver detalhes</button></div>':`<div class="ac"><button onclick="fin('${t.id}')">${dn?'↩':'✓'}</button><button onclick="sn('${t.id}')" title="Mover de dia">📅</button>${t.due?`<a href="${gc(t)}" target="_blank" title="Google Calendar">🗓</a>`:''}<button onclick="edit('${t.id}')">✏️</button>${b?`<button onclick="mv('${t.id}',-1)">◀</button><button onclick="mv('${t.id}',1)">▶</button>`:''}</div>`)+'</div>'}
 function nrb(t){const n=new Date(),s=ymd(n)+'T'+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),r=(t.rm||[]).filter(q=>q>=s)[0];return r?`<span class="c">🔔 ${(r.slice(0,10)===td()?'':fm(r.slice(0,10))+' ')+r.slice(11,16)}</span>`:''}
 function revb(L){const x=td(),n=L.filter(t=>t.due&&dd(x,t.due)>=7).length;return`<button class="b g" onclick="rev()">🗓 Revisão${n?' · ⚠️ '+n:''}</button>`}
 function rev(){const x=td(),L=V().filter(t=>t.st!=='feito'&&t.st!=='ideia'),od=L.filter(t=>t.due&&t.due<x).sort((a,b)=>a.due.localeCompare(b.due)),
@@ -110,7 +111,7 @@ function edit(id,pre){const t=id?T(id):mk({c:S.me,...pre});window._t=t;
 const o=(a,v)=>a.map(([k,l])=>`<option value="${k}"${k==v?' selected':''}>${l}</option>`).join(''),i=(k,l,ty)=>`<label>${l}<input id="f${k}" type="${ty||'text'}" value="${esc(t[k]||'')}"></label>`;
 modal(`<h3>${id?'Editar':'Nova'} tarefa</h3>${i('t','Título')}
 <label>Etapa<select id="fst">${o(ST.concat([['depois','Mais tarde (some até o dia)']]),t.lt?'depois':t.st)}</select></label>
-<div class="r2">${i('due','Dia','date')}${i('tm','Hora (avisa neste horário)','time')}</div>
+<div class="r2">${i('due','Dia','date')}${i('tm','Hora (avisa neste horário)','time')}</div>${id&&t.due?`<a class="b g" href="${gc(t)}" target="_blank" rel="noopener">🗓 Adicionar ao Google Calendar</a>`:''}
 <label>Subtarefas (uma por linha)<textarea id="fsb">${esc(t.subs.map(s=>s.t).join('\n'))}</textarea></label>
 <label>Anotações<textarea id="fnt">${esc(t.nt)}</textarea></label>
 <details class="mo"><summary>⚙️ Mais opções</summary>

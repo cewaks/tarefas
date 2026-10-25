@@ -30,7 +30,7 @@ if(row.deleted){if(i>=0)arr.splice(i,1);delete snap[k];return}
 const d=row.data;d.id=row.id;
 if(i>=0){if(snap[k]!==undefined&&cj(arr[i])!==snap[k])return;arr[i]=d}else arr.push(d);
 snap[k]=cj(d)}
-async function pull(){const r=await sb.from('items').select('*').eq('household',hh);if(r.error)return;r.data.forEach(ap);ssnap();render()}
+async function pull(){const r=await sb.from('items').select('*').eq('household',hh);if(r.error)return;r.data.forEach(ap);if(window.afterPull)window.afterPull();ssnap();render()}
 async function push(){if(!ready)return;if(busy){again=true;return}busy=true;
 try{const cur={};S.tasks.forEach(t=>cur['task:'+t.id]=t);S.rot.forEach(r=>cur['rot:'+r.id]=r);const ins=[];
 for(const k in cur){const o=cur[k],c=cj(o);if(snap[k]===c)continue;const p=k.indexOf(':'),kind=k.slice(0,p),id=k.slice(p+1);
